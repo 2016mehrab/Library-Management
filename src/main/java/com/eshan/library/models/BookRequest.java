@@ -16,9 +16,6 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 public class BookRequest {
-    //    TODO: Add studentId foreign key
-    //    TODO: Add bookId foreign key
-    //    TODO: Add librarianId foreign key
     @Id
     @GeneratedValue
     @Column(
@@ -44,5 +41,7 @@ public class BookRequest {
     @JoinColumn(name = "book_id")
     private Book book;
 
-//    TODO: Add approveStatus of type enum
+    @Enumerated(EnumType.STRING)
+    @Column(name = "approve_status")
+    private ApproveStatus approveStatus;
 }
