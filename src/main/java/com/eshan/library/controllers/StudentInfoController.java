@@ -44,13 +44,13 @@ public class StudentInfoController {
         studentInfoService.deleteStudentInfo(id);
     }
 
-    @PutMapping("{studentId}")
+    @PutMapping("email/{studentId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateStudentInfoEmail(@RequestBody StudentInfo studentInfo,@PathVariable("studentId")Integer id){
         studentInfoService.updateStudentInfoEmail(studentInfo, id);
     }
 
-    @PutMapping("{studentId}")
+    @PutMapping("name/{studentId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateStudentInfoName(@RequestBody StudentInfo studentInfo,@PathVariable("studentId")Integer id){
         studentInfoService.updateStudentInfoName(studentInfo, id);
