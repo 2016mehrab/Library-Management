@@ -1,0 +1,20 @@
+@admin-url = http://127.0.0.1:8080/admins
+
+###
+POST {{admin-url}}
+Content-Type: application/json
+
+{
+    "username": "mehrab",
+    "password": "admin"
+}
+###
+PUT {{admin-url}}/1
+Content-Type: application/json
+
+{
+    "username": "eshan",
+    "password": "123admin"
+}
+###
+GET {{admin-url}}
