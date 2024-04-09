@@ -1,5 +1,6 @@
 @admin-url = http://127.0.0.1:8080/admins
 
+
 ###
 POST {{admin-url}}
 Content-Type: application/json
@@ -18,3 +19,46 @@ Content-Type: application/json
 }
 ###
 GET {{admin-url}}
+###
+@studentinfo-url=http://127.0.0.1:8080/studentinfo
+###
+POST {{studentinfo-url}}
+Content-Type: application/json
+
+{
+    "name": "Ash",
+    "email": "ashley@gmail.com",
+    "admin":{
+        "id":1
+    },
+    "id":20101498
+
+}
+###
+GET {{studentinfo-url}}
+###
+PUT {{studentinfo-url}}/email/2010
+Content-Type: application/json
+
+{
+    "name": "britt",
+    "email": "britany@gmail.com",
+    "admin":{
+        "id":1
+    },
+    "id":2010
+}
+###
+PUT {{studentinfo-url}}/name/2010
+Content-Type: application/json
+
+{
+    "name": "Britt",
+    "email": "britany@gmail.com",
+    "admin":{
+        "id":1
+    },
+    "id":2010
+}
+###
+DELETE {{studentinfo-url}}/2010

@@ -10,6 +10,7 @@ import com.eshan.library.services.StudentInfoService;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +29,15 @@ public class StudentInfoController {
     }
     
     @PostMapping
-    public StudentInfo post(@RequestBody StudentInfo studentInfo){
-        return studentInfoService.saveStudentInfo(studentInfo);
+    public ResponseEntity<StudentInfo> post(@RequestBody StudentInfo studentInfo){
+        try{
+            StudentInfo savedStudentInfo = studentInfoService.saveStudentInfo(studentInfo);
+            return new ResponseEntity<StudentInfo>(savedStudentInfo, HttpStatus.CREATED);
+
+
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
     @GetMapping("{studentId}")
     public StudentInfo findStudentInfoById(@PathVariable("studentId")Integer id){

@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
@@ -26,6 +28,7 @@ public class Admin {
     @OneToMany(mappedBy = "admin")
     private List<LibrarianInfo> librarianInfoList;
     @OneToMany(mappedBy = "admin")
+    @JsonManagedReference
     private List<StudentInfo> studentInfoList;
 
 }

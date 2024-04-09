@@ -1,5 +1,7 @@
 package com.eshan.library.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,5 +37,6 @@ public class StudentInfo {
     private String name;
     @ManyToOne
     @JoinColumn(name = "admin_id")
+    @JsonBackReference
     private Admin admin;
 }
