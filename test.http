@@ -1,5 +1,6 @@
 @admin-url = http://127.0.0.1:8080/admins
 @librarianinfo-url =http://127.0.0.1:8080/librarianinfo 
+@librarian-url = http://127.0.0.1:8080/librarian
 
 
 ###
@@ -116,3 +117,37 @@ Content-Type: application/json
 }
 ###
 DELETE {{librarianinfo-url}}/101
+###
+
+POST {{librarian-url}}
+Content-Type: application/json
+
+{
+    "username": "emily",
+    "password": "ema",
+    "id":101
+}
+
+###
+POST {{librarian-url}}
+Content-Type: application/json
+
+{
+    "username": "brad",
+    "password": "brad",
+    "id":102
+}
+###
+GET {{librarian-url}}
+###
+GET {{librarian-url}}/101
+###
+PUT {{librarian-url}}/102
+Content-Type: application/json
+
+{
+    "password": "brady"
+}
+###
+DELETE {{librarian-url}}/101
+###
