@@ -21,7 +21,7 @@ public class StudentInfoService {
 
     public StudentInfo saveStudentInfo(StudentInfo studentInfo) {
         Admin admin = adminRepository.findById(studentInfo.getAdmin().getId()).orElse(null);
-        if(studentInfoRepository.existsById(studentInfo.getId())){
+        if (studentInfoRepository.existsById(studentInfo.getId())) {
             throw new RuntimeException("Operation was not successful: Student exists");
         }
         if (admin != null) {
@@ -49,7 +49,10 @@ public class StudentInfoService {
         if (studentInfo != null) {
             updatedStudentInfo.setEmail(studentInfo.getEmail());
             studentInfoRepository.save(updatedStudentInfo);
+        } else {
+            throw new RuntimeException("Operation was not successful: Student Not Found!");
         }
+
     }
 
     public void updateStudentInfoName(StudentInfo studentInfo, Integer id) {
@@ -57,6 +60,8 @@ public class StudentInfoService {
         if (studentInfo != null) {
             updatedStudentInfo.setName(studentInfo.getName());
             studentInfoRepository.save(updatedStudentInfo);
+        } else {
+            throw new RuntimeException("Operation was not successful: Student Not Found!");
         }
     }
 

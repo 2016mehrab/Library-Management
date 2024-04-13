@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/studentinfo")
 public class StudentInfoController {
@@ -27,40 +26,59 @@ public class StudentInfoController {
     public StudentInfoController(StudentInfoService studentInfoService) {
         this.studentInfoService = studentInfoService;
     }
-    
+
     @PostMapping
-    public ResponseEntity<StudentInfo> post(@RequestBody StudentInfo studentInfo){
-        try{
+    public ResponseEntity<StudentInfo> post(@RequestBody StudentInfo studentInfo) {
+        try {
             StudentInfo savedStudentInfo = studentInfoService.saveStudentInfo(studentInfo);
             return new ResponseEntity<StudentInfo>(savedStudentInfo, HttpStatus.CREATED);
 
-
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("{studentId}")
-    public StudentInfo findStudentInfoById(@PathVariable("studentId")Integer id){
+    public StudentInfo findStudentInfoById(@PathVariable("studentId") Integer id) {
         return studentInfoService.findStudentInfoById(id);
     }
+
     @GetMapping
-    public List<StudentInfo> findAllStudentInfo(){return studentInfoService.findAllStudentInfo();}
-    
+    public List<StudentInfo> findAllStudentInfo() {
+        return studentInfoService.findAllStudentInfo();
+    }
+
     @DeleteMapping("{studentId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteStudentInfo(@PathVariable("studentId")Integer id){
+    public void deleteStudentInfo(@PathVariable("studentId") Integer id) {
         studentInfoService.deleteStudentInfo(id);
     }
 
     @PutMapping("email/{studentId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateStudentInfoEmail(@RequestBody StudentInfo studentInfo,@PathVariable("studentId")Integer id){
-        studentInfoService.updateStudentInfoEmail(studentInfo, id);
+    // public void updateStudentInfoEmail(@RequestBody StudentInfo
+    // studentInfo,@PathVariable("studentId")Integer id){
+    public ResponseEntity<StudentInfo> updateStudentInfoEmail(@RequestBody StudentInfo studentInfo,
+            @PathVariable("studentId") Integer id) {
+        try {
+            studentInfoService.updateStudentInfoEmail(studentInfo, id);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("name/{studentId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateStudentInfoName(@RequestBody StudentInfo studentInfo,@PathVariable("studentId")Integer id){
-        studentInfoService.updateStudentInfoName(studentInfo, id);
+    public ResponseEntity<StudentInfo> updateStudentInfoName(@RequestBody StudentInfo studentInfo,
+            @PathVariable("studentId") Integer id) {
+        try {
+            studentInfoService.updateStudentInfoName(studentInfo, id);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 }
