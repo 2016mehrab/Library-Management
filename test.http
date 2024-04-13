@@ -1,4 +1,5 @@
 @admin-url = http://127.0.0.1:8080/admins
+@librarianinfo-url =http://127.0.0.1:8080/librarianinfo 
 
 
 ###
@@ -35,9 +36,7 @@ Content-Type: application/json
 
 }
 ###
-GET {{studentinfo-url}}
-###
-PUT {{studentinfo-url}}/email/2010
+POST {{studentinfo-url}}
 Content-Type: application/json
 
 {
@@ -46,7 +45,17 @@ Content-Type: application/json
     "admin":{
         "id":1
     },
-    "id":2010
+    "id":20101320
+}
+###
+GET {{studentinfo-url}}
+###
+PUT {{studentinfo-url}}/email/20101320
+Content-Type: application/json
+
+{
+    "name": "Britt",
+    "email": "brittany@gmail.com"
 }
 ###
 PUT {{studentinfo-url}}/name/2010
@@ -62,3 +71,48 @@ Content-Type: application/json
 }
 ###
 DELETE {{studentinfo-url}}/2010
+###
+POST {{librarianinfo-url}}
+Content-Type: application/json
+
+{
+    "name": "Emily",
+    "email": "em@gmail.com",
+    "admin":{
+        "id":1
+    },
+    "id":101
+
+}
+###
+POST {{librarianinfo-url}}
+Content-Type: application/json
+
+{
+    "name": "Brad",
+    "email": "br@gmail.com",
+    "admin":{
+        "id":1
+    },
+    "id":102
+}
+###
+GET {{librarianinfo-url}}
+###
+GET {{librarianinfo-url}}/101
+###
+PUT {{librarianinfo-url}}/email/102
+Content-Type: application/json
+
+{
+    "email": "brad@gmail.com"
+}
+###
+PUT {{librarianinfo-url}}/name/102
+Content-Type: application/json
+
+{
+    "name": "Brady"
+}
+###
+DELETE {{librarianinfo-url}}/101
