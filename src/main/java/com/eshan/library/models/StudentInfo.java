@@ -22,8 +22,9 @@ public class StudentInfo {
     )
     private Integer id;
 
-    @OneToOne(mappedBy = "studentInfo", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "studentInfo", cascade = CascadeType.REMOVE)
     @PrimaryKeyJoinColumn
+    @JsonBackReference("student-studentInfo")
     private Student student;
 
     @Column(

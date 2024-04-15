@@ -1,6 +1,7 @@
 @admin-url = http://127.0.0.1:8080/admins
 @librarianinfo-url =http://127.0.0.1:8080/librarianinfo 
-@librarian-url = http://127.0.0.1:8080/librarian
+@librarian-url = http://127.0.0.1:8080/librarians
+@student-url = http://127.0.0.1:8080/students
 
 
 ###
@@ -71,7 +72,7 @@ Content-Type: application/json
     "id":2010
 }
 ###
-DELETE {{studentinfo-url}}/2010
+DELETE {{studentinfo-url}}/20101320
 ###
 POST {{librarianinfo-url}}
 Content-Type: application/json
@@ -150,4 +151,36 @@ Content-Type: application/json
 }
 ###
 DELETE {{librarian-url}}/102
+###
+POST {{student-url}}
+Content-Type: application/json
+
+{
+    "username": "britt",
+    "password": "brt",
+    "studentId":20101320
+}
+
+###
+POST {{student-url}}
+Content-Type: application/json
+
+{
+    "username": "ash",
+    "password": "ashen",
+    "studentId":20101498
+}
+###
+GET {{student-url}}
+###
+GET {{student-url}}/20101498
+###
+PUT {{student-url}}/20101320
+Content-Type: application/json
+
+{
+    "password": "brot"
+}
+###
+DELETE {{student-url}}/20101320
 ###

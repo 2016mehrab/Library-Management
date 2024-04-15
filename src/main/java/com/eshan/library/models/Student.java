@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
@@ -25,6 +27,7 @@ public class Student {
             name = "student_id",
             referencedColumnName = "id"
     )
+    @JsonManagedReference("student-studentInfo")
     private StudentInfo studentInfo;
     @Column(
             unique = true,

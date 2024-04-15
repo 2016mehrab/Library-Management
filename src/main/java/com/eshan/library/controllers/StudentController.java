@@ -14,22 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eshan.library.models.Librarian;
-import com.eshan.library.services.LibrarianDTO;
-import com.eshan.library.services.LibrarianService;
+import com.eshan.library.models.Student;
+import com.eshan.library.services.StudentDTO;
+import com.eshan.library.services.StudentService;
 
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/librarians")
+@RequestMapping("/students")
 @AllArgsConstructor
-public class LibrarianController {
-    private final LibrarianService librarianService;
+public class StudentController {
+    private final StudentService studentService;
 
     @PostMapping
-    public ResponseEntity<String> post(@RequestBody LibrarianDTO librarianDTO) {
+    public ResponseEntity<String> post(@RequestBody StudentDTO studentDTO) {
         try {
-            Librarian savedL = librarianService.saveLibrarian(librarianDTO);
+            studentService.save(studentDTO);
             return new ResponseEntity<>(null, HttpStatus.CREATED);
 
         } catch (Exception e) {
@@ -37,33 +37,33 @@ public class LibrarianController {
         }
     }
 
-    @GetMapping("{libId}")
-    public Librarian LibrarianfindById(@PathVariable("libId") Integer id) {
-        return librarianService.findLibrarianById(id);
+    @GetMapping("{Id}")
+
+    public Student findById(@PathVariable("Id") Integer id) {
+        return studentService.findStudentById(id);
     }
 
     @GetMapping
-    public List<Librarian> findAllStudentInfo() {
-        return librarianService.findAllLibrarian();
+    public List<Student> findAll() {
+        return studentService.findAll();
     }
 
-    @DeleteMapping("{libId}")
+    @DeleteMapping("{Id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteLibrarian(@PathVariable("libId") Integer id) {
-        librarianService.deleteLibrarian(id);
+    public void deleteLibrarian(@PathVariable("Id") Integer id) {
+        studentService.delete(id);
     }
 
-    @PutMapping("{libId}")
+    @PutMapping("{Id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Librarian> updatePassword(@RequestBody Librarian librarian,
-            @PathVariable("libId") Integer id) {
+    public ResponseEntity<Student> updatePassword(@RequestBody Student student,
+            @PathVariable("Id") Integer id) {
         try {
-            librarianService.updateLibrarianPassword(librarian, id);
+            studentService.updatePassword(student, id);
             return new ResponseEntity<>(null, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
 }
