@@ -116,7 +116,7 @@ Content-Type: application/json
     "name": "Brady"
 }
 ###
-DELETE {{librarianinfo-url}}/101
+DELETE {{librarianinfo-url}}/102
 ###
 
 POST {{librarian-url}}
@@ -125,7 +125,7 @@ Content-Type: application/json
 {
     "username": "emily",
     "password": "ema",
-    "id":101
+    "librarianId":101
 }
 
 ###
@@ -135,7 +135,7 @@ Content-Type: application/json
 {
     "username": "brad",
     "password": "brad",
-    "id":102
+    "librarianId":102
 }
 ###
 GET {{librarian-url}}
@@ -149,5 +149,5 @@ Content-Type: application/json
     "password": "brady"
 }
 ###
-DELETE {{librarian-url}}/101
+DELETE {{librarian-url}}/102
 ###

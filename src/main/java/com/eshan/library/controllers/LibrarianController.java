@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eshan.library.models.Librarian;
+import com.eshan.library.services.LibrarianDTO;
 import com.eshan.library.services.LibrarianService;
 
 import lombok.AllArgsConstructor;
@@ -26,13 +27,13 @@ public class LibrarianController {
     private final LibrarianService librarianService;
 
     @PostMapping
-    public ResponseEntity<Librarian> post(@RequestBody Librarian librarian) {
+    public ResponseEntity<String> post(@RequestBody LibrarianDTO librarianDTO) {
         try {
-            Librarian savedL = librarianService.saveLibrarian(librarian);
-            return new ResponseEntity<Librarian>(savedL, HttpStatus.CREATED);
+            Librarian savedL = librarianService.saveLibrarian(librarianDTO);
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

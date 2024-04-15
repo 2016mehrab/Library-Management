@@ -35,6 +35,7 @@ public class Book {
                     (name = "author_id")}
     )
     private List<Author> authors;
+    // owner of the relationship
     @ManyToMany
     @JoinTable(
             name = "book_category",

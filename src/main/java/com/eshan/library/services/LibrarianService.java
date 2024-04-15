@@ -17,38 +17,47 @@ public class LibrarianService {
     private final LibrarianRepository librarianRepository;
     private final LibrarianInfoRepository librarianInfoRepository;
 
-    public Librarian saveLibrarian(Librarian librarian) {
-        LibrarianInfo librarianInfo = librarianInfoRepository.findById(librarian.getId()).orElse(null);
-        if (librarianRepository.existsById(librarian.getId())) {
-            throw new RuntimeException("Operation was not successful: Librarian exists!");
-        }
+    public Librarian saveLibrarian(LibrarianDTO librarianDTO) {
+        var librarian = toLibrarian(librarianDTO);
+        return librarianRepository.save(librarian);
+    }
+
+    private Librarian toLibrarian(LibrarianDTO librarianDTO) {
+        var librarian = new Librarian();
+        librarian.setUsername(librarianDTO.username());
+        librarian.setPassword(librarianDTO.password());
+        LibrarianInfo librarianInfo = librarianInfoRepository.findById(librarianDTO.librarianId()).orElse(null);
         if (librarianInfo != null) {
             librarian.setLibrarianInfo(librarianInfo);
-            return librarianRepository.save(librarian);
+            return librarian;
         } else {
-            throw new RuntimeException("Operation was not successful: Admin not found");
+            throw new RuntimeException("Operation was not successful: LibrarianInfo not found");
+
         }
     }
 
-    public Librarian findLibrarianById(Integer id){
-        return librarianRepository.findById(id).orElse(null);
+    public Librarian findLibrarianById(Integer id) {
+        LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
+
+        return librarianInfo.getLibrarian();
     }
 
-    public List<Librarian> findAllLibrarian(){
+    public List<Librarian> findAllLibrarian() {
         return librarianRepository.findAll();
     }
 
-    public void deleteLibrarian(Integer id){
-        librarianRepository.deleteById(id);
+    public void deleteLibrarian(Integer id) {
+        LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
+        librarianRepository.deleteById(librarianInfo.getLibrarian().getId());
     }
 
-
-    public void updateLibrarianPassword(Librarian librarian, Integer id){
-        Librarian updatedL= librarianRepository.findById(id).orElse(null);
-        if(librarian!=null){
+    public void updateLibrarianPassword(Librarian librarian, Integer id) {
+        LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
+        Librarian updatedL = librarianRepository.findById(librarianInfo.getLibrarian().getId()).orElse(null);
+        if (librarian != null) {
             updatedL.setPassword(librarian.getPassword());
             librarianRepository.save(updatedL);
-        }else {
+        } else {
             throw new RuntimeException("Operation was not successful: Librarian Not Found!");
         }
     }

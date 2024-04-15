@@ -31,8 +31,8 @@ public class LibrarianInfo {
     )
     private String name;
 
-    @OneToOne(mappedBy = "librarianInfo", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne( mappedBy = "librarianInfo",cascade = CascadeType.REMOVE)
+    @JsonBackReference("librarian-librarianInfo")
     private Librarian librarian;
 
     @ManyToOne
