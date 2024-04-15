@@ -37,6 +37,7 @@ public class BookRequest {
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
+
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
