@@ -25,15 +25,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Librarian {
         @Id
         @GeneratedValue
-        @Column(
-                unique = true,
-                nullable = false
-        )
+        @Column(unique = true, nullable = false)
         private Integer id;
         @Column(unique = true, nullable = false)
         private String username;
         private String password;
         @OneToMany(mappedBy = "librarian", cascade = CascadeType.ALL, orphanRemoval = true)
+        @JsonManagedReference("bookrequest-librarian")
         private List<BookRequest> bookRequests;
         @OneToOne
         @JoinColumn(name = "librarian_id")

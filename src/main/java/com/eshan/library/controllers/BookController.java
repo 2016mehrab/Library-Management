@@ -44,6 +44,7 @@ public class BookController {
         return bookService.findByIsbn(isbn);
     }
 
+    // TODO: Implement response DTO
     @GetMapping
     public List<Book> findAll() {
 

@@ -2,6 +2,7 @@
 @librarianinfo-url =http://127.0.0.1:8080/librarianinfo 
 @librarian-url = http://127.0.0.1:8080/librarians
 @student-url = http://127.0.0.1:8080/students
+@bookrequest-url=http://127.0.0.1:8080/bookrequests
 
 
 ###
@@ -192,13 +193,26 @@ POST http://localhost:8080/books
 Content-Type: application/json
 
 {
+    "isbn": "1234567891",
+    "title": "Prochur Koshto",
+    "quantity": 12,
+    "price": 29.99,
+    "coverLink": "http://dummylink1.com",
+    "categories": ["Fantasy", "Adventure"],
+    "authors": ["Monsur", "Mirsil"]
+}
+###
+POST http://localhost:8080/books 
+Content-Type: application/json
+
+{
     "isbn": "1234567890",
-    "title": "Dummy Book",
-    "quantity": 10,
-    "price": 19.99,
-    "coverLink": "http://dummylink.com",
-    "categories": ["Fiction", "Adventure"],
-    "authors": ["Author1", "Author2"]
+    "title": "Prochur Koshto II",
+    "quantity": 2,
+    "price": 39.99,
+    "coverLink": "http://dummylink2.com",
+    "categories": ["Fantasy", "Action"],
+    "authors": ["Monsur", "Mirsil"]
 }
 ###
 GET http://localhost:8080/books/1234567890 
@@ -225,5 +239,24 @@ Content-Type: application/json
     "coverLink": "http://newdummylink.com"
 }
 
+### BOOK REQUESTS
+POST  {{bookrequest-url}}
+Content-Type: application/json
+
+{
+    "isbn": "1234567890",
+    "studentId":20101498,
+    "librarianId":101
+}
+
 ###
+GET {{bookrequest-url}}
+###
+PUT {{bookrequest-url}}/1/status
+Content-Type: application/json
+
+{
+    "approveStatus": "APPROVED"
+}
+
 ###

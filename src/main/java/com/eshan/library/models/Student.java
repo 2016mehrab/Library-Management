@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @NoArgsConstructor
@@ -16,28 +17,21 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Builder
 public class Student {
-    @Id
-    @Column(
-            name = "student_id"
-    )
-    private Integer id;
-    @OneToOne
-    @MapsId
-    @JoinColumn(
-            name = "student_id",
-            referencedColumnName = "id"
-    )
-    @JsonManagedReference("student-studentInfo")
-    private StudentInfo studentInfo;
-    @Column(
-            unique = true,
-            nullable = false
-    )
-    private String username;
-    private String password;
-    @OneToMany(mappedBy = "student")
-    private List<BorrowRecord> borrowRecords;
+        @Id
+        @Column(name = "student_id")
+        private Integer id;
+        @OneToOne
+        @MapsId
+        @JoinColumn(name = "student_id", referencedColumnName = "id")
+        @JsonManagedReference("student-studentInfo")
+        private StudentInfo studentInfo;
+        @Column(unique = true, nullable = false)
+        private String username;
+        private String password;
+        @OneToMany(mappedBy = "student")
+        private List<BorrowRecord> borrowRecords;
 
-    @OneToMany(mappedBy = "student")
-    private List<BookRequest> bookRequests;
+        @OneToMany(mappedBy = "student")
+        @JsonManagedReference("bookrequest-student")
+        private List<BookRequest> bookRequests;
 }
