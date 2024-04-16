@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @NoArgsConstructor
@@ -43,6 +44,7 @@ public class Book {
         private List<Category> categories;
 
         @OneToMany(mappedBy = "book")
+        @JsonManagedReference("book-borrowrecord")
         private List<BorrowRecord> borrowRecords;
 
         @OneToMany(mappedBy = "book")

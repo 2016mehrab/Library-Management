@@ -29,6 +29,7 @@ public class Student {
         private String username;
         private String password;
         @OneToMany(mappedBy = "student")
+        @JsonManagedReference("student-borrowrecord")
         private List<BorrowRecord> borrowRecords;
 
         @OneToMany(mappedBy = "student")
