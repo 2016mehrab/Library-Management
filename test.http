@@ -4,6 +4,7 @@
 @student-url = http://127.0.0.1:8080/students
 @bookrequest-url=http://127.0.0.1:8080/bookrequests
 
+@borrowrecord-url=http://127.0.0.1:8080/bookrecords
 
 ###
 POST {{admin-url}}
@@ -259,4 +260,17 @@ Content-Type: application/json
     "approveStatus": "APPROVED"
 }
 
+###
+### BOOK REQUESTS
+POST  {{borrowrecord-url}}
+Content-Type: application/json
+
+{
+    "bookId": 1,
+    "studentId":20101498,
+    "bookRequestId":1
+}
+
+###
+GET {{borrowrecord-url}}
 ###
