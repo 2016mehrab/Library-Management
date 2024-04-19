@@ -6,6 +6,25 @@
 
 @borrowrecord-url=http://127.0.0.1:8080/bookrecords
 
+@auth-url=http://127.0.0.1:8080/auth
+
+###
+POST {{auth-url}}/register
+Content-Type: application/json
+
+{
+    "username": "mehrab",
+    "password": "admin"
+}
+###
+POST {{auth-url}}/authenticate
+Content-Type: application/json
+
+{
+    "username": "mehrab",
+    "password": "admin"
+}
+
 ###
 POST {{admin-url}}
 Content-Type: application/json
@@ -22,8 +41,11 @@ Content-Type: application/json
     "username": "eshan",
     "password": "123admin"
 }
+
+
 ###
 GET {{admin-url}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM1Mzc1NDQsImV4cCI6MTcxMzUzODk4NH0.MMQRMRq66zgheBDG9UyKklNGhP23vOON9uuJm_ICWAE
 ###
 @studentinfo-url=http://127.0.0.1:8080/studentinfo
 ###
@@ -190,19 +212,7 @@ DELETE {{student-url}}/20101320
 ###
 ### BOOK
 
-POST http://localhost:8080/books 
-Content-Type: application/json
 
-{
-    "isbn": "1234567891",
-    "title": "Prochur Koshto",
-    "quantity": 12,
-    "price": 29.99,
-    "coverLink": "http://dummylink1.com",
-    "categories": ["Fantasy", "Adventure"],
-    "authors": ["Monsur", "Mirsil"]
-}
-###
 POST http://localhost:8080/books 
 Content-Type: application/json
 

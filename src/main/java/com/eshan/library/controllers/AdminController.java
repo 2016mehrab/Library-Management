@@ -45,9 +45,6 @@ public class AdminController {
             @PathVariable ("adminId") Integer id
     ){
         adminService.updateAdminPassword(admin,id);
-
     }
-
-
 }
 

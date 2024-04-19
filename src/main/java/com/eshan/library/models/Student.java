@@ -6,9 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @NoArgsConstructor
@@ -16,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @AllArgsConstructor
 @Entity
 @Builder
-public class Student {
+public class Student implements UserDetails{
         @Id
         @Column(name = "student_id")
         private Integer id;
@@ -35,4 +39,33 @@ public class Student {
         @OneToMany(mappedBy = "student")
         @JsonManagedReference("bookrequest-student")
         private List<BookRequest> bookRequests;
+
+        @Enumerated(EnumType.STRING)
+        private Role role;
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+                
+                return List.of(new SimpleGrantedAuthority(role.name()));
+        }
+
+        @Override
+        public boolean isAccountNonExpired() {
+                return true;
+        }
+
+        @Override
+        public boolean isAccountNonLocked() {
+                return true;
+        }
+
+        @Override
+        public boolean isCredentialsNonExpired() {
+                return true;
+        }
+
+        @Override
+        public boolean isEnabled() {
+                return true;
+        }
 }
