@@ -8,6 +8,7 @@
 
 @auth-url=http://127.0.0.1:8080/auth
 
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM1NDk4NTksImV4cCI6MTcxMzU1MTI5OX0.9wEQoijmJTFCytyOv34BKGh-7t9-GZkl5boFr9lNioc
 ###
 POST {{auth-url}}/register
 Content-Type: application/json
@@ -45,11 +46,12 @@ Content-Type: application/json
 
 ###
 GET {{admin-url}}
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM1Mzc1NDQsImV4cCI6MTcxMzUzODk4NH0.MMQRMRq66zgheBDG9UyKklNGhP23vOON9uuJm_ICWAE
+Authorization: Bearer {{auth-token}}
 ###
 @studentinfo-url=http://127.0.0.1:8080/studentinfo
 ###
 POST {{studentinfo-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {

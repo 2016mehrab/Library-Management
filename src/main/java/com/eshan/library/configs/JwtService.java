@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.boot.autoconfigure.ssl.SslBundleProperties.Key;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,10 @@ public class JwtService {
 
     public String extractUsername(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject);
+    }
+
+    public String extractRole(String jwtToken) {
+        return extractClaim(jwtToken, claims -> claims.get("role", String.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
@@ -45,6 +50,8 @@ public class JwtService {
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userdetails) {
+        extraClaims.put("role", userdetails.getAuthorities().stream().findFirst().map(GrantedAuthority::getAuthority)
+                .orElse(""));
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userdetails.getUsername())
@@ -59,16 +66,18 @@ public class JwtService {
             UserDetails userdetails) {
         return generateToken(new HashMap<>(), userdetails);
     }
-    public boolean isTokenValid(String token, UserDetails userDetails){
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()));
     }
-    public boolean isTokenExpired(String token){
+
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
-    return extractClaim(token, Claims::getExpiration);
+        return extractClaim(token, Claims::getExpiration);
     }
 
 }
