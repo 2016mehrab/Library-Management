@@ -14,8 +14,11 @@ import com.eshan.library.models.StudentInfo;
 import com.eshan.library.repositories.BookRepository;
 import com.eshan.library.repositories.BookRequestRepository;
 import com.eshan.library.repositories.LibrarianInfoRepository;
+import com.eshan.library.repositories.LibrarianRepository;
 import com.eshan.library.repositories.StudentInfoRepository;
+import com.eshan.library.repositories.StudentRepository;
 import com.eshan.library.services.bookRequestDTO.BookRequestDTO;
+import com.eshan.library.services.bookRequestDTO.BookRequestResponseDTO;
 import com.eshan.library.services.bookRequestDTO.StatusUpdateDTO;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +30,9 @@ public class BookRequestService {
     private final BookRequestRepository bookRequestRepository;
     private final LibrarianInfoRepository librarianInfoRepository;
     private final StudentInfoRepository studentInfoRepository;
+    private final StudentRepository studentRepository;
+    private final LibrarianRepository librarianRepository;
+    private final LibrarianService librarianService;
 
     public BookRequest save(BookRequestDTO dto) {
         var bookRequest = toBookRequest(dto);
@@ -70,8 +76,47 @@ public class BookRequestService {
         return bookRequest;
     }
 
+    private BookRequestResponseDTO toBookRequestResponseDTO(BookRequestDTO bookRequestDTO) {
+        Optional<Book> book = bookRepository.findByIsbn(bookRequestDTO.isbn());
+        Optional<Student> student = studentRepository.findById(bookRequestDTO.studentId());
+        Librarian librarian = librarianService.findLibrarianById(bookRequestDTO.librarianId());
+
+        if (book.isPresent() && student.isPresent() && librarian != null) {
+            return BookRequestResponseDTO.builder().isbn(bookRequestDTO.isbn())
+                    .librarianId(bookRequestDTO.librarianId())
+                    .studentId(bookRequestDTO.studentId())
+                    .build();
+        }
+        else{
+            throw new RuntimeException("Operation was not successful: Librarian Not Found!");
+        }
+    }
+    private BookRequestResponseDTO toBookRequestResponseDTO(BookRequest br) {
+        Optional<Book> book = bookRepository.findByIsbn(br.getBook().getIsbn());
+        Optional<Student> student = studentRepository.findById(br.getStudent().getId());
+        Librarian librarian = librarianService.findLibrarianById(br.getLibrarian().getLibrarianInfo().getId());
+
+        if (book.isPresent() && student.isPresent() && librarian != null) {
+            return BookRequestResponseDTO.builder().isbn(book.get().getIsbn())
+                    .librarianId(librarian.getLibrarianInfo().getId())
+                    .studentId(student.get().getId())
+                    .build();
+        }
+        else return null;
+    }
+
     public List<BookRequest> findAll() {
         return bookRequestRepository.findAll();
+
+    }
+
+    public BookRequestResponseDTO findById(Integer id){
+        if(bookRequestRepository.findById(id).isPresent()){
+            return toBookRequestResponseDTO(bookRequestRepository.findById(id).get()) ;
+        }
+        else{
+            throw new RuntimeException("Operation was not successful: Book request doesnot exist");
+        }
 
     }
 

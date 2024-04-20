@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eshan.library.models.BookRequest;
 import com.eshan.library.services.BookRequestService;
 import com.eshan.library.services.bookRequestDTO.BookRequestDTO;
+import com.eshan.library.services.bookRequestDTO.BookRequestResponseDTO;
 import com.eshan.library.services.bookRequestDTO.StatusUpdateDTO;
 
 import lombok.AllArgsConstructor;
@@ -37,10 +38,16 @@ public class BookRequestController {
         }
     }
 
-    @GetMapping
-    public List<BookRequest> findAll() {
+    @GetMapping("{Id}")
+    public ResponseEntity<BookRequestResponseDTO> findbyId(@PathVariable ("Id") Integer id) {
 
-        return bookRequestService.findAll();
+        try {
+            
+            return new ResponseEntity<>(bookRequestService.findById(id), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("{Id}/status")
