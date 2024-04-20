@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.eshan.library.models.Librarian;
 import com.eshan.library.models.LibrarianInfo;
+import com.eshan.library.models.Role;
 import com.eshan.library.repositories.LibrarianInfoRepository;
 import com.eshan.library.repositories.LibrarianRepository;
 
@@ -24,8 +25,11 @@ public class LibrarianService {
 
     private Librarian toLibrarian(LibrarianDTO librarianDTO) {
         var librarian = new Librarian();
+
         librarian.setUsername(librarianDTO.username());
         librarian.setPassword(librarianDTO.password());
+        librarian.setRole(Role.LIBRARIAN);
+
         LibrarianInfo librarianInfo = librarianInfoRepository.findById(librarianDTO.librarianId()).orElse(null);
         if (librarianInfo != null) {
             librarian.setLibrarianInfo(librarianInfo);
@@ -36,12 +40,14 @@ public class LibrarianService {
         }
     }
 
+    // TODO: create a response dto
     public Librarian findLibrarianById(Integer id) {
         LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
 
         return librarianInfo.getLibrarian();
     }
 
+    // TODO: create a response dto
     public List<Librarian> findAllLibrarian() {
         return librarianRepository.findAll();
     }

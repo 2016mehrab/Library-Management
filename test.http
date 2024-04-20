@@ -8,7 +8,7 @@
 
 @auth-url=http://127.0.0.1:8080/auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM1NDk4NTksImV4cCI6MTcxMzU1MTI5OX0.9wEQoijmJTFCytyOv34BKGh-7t9-GZkl5boFr9lNioc
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM2Mjg3NDIsImV4cCI6MTcxMzYzMDE4Mn0.FBMXSOVT-QjgiBzvKhNlAsXAFGaIq4TXL5MhVikvOKo
 ###
 POST {{auth-url}}/register
 Content-Type: application/json
@@ -66,6 +66,7 @@ Content-Type: application/json
 ###
 POST {{studentinfo-url}}
 Content-Type: application/json
+Authorization: Bearer {{auth-token}}
 
 {
     "name": "britt",
@@ -77,8 +78,10 @@ Content-Type: application/json
 }
 ###
 GET {{studentinfo-url}}
+Authorization: Bearer {{auth-token}}
 ###
 PUT {{studentinfo-url}}/email/20101320
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -101,6 +104,7 @@ Content-Type: application/json
 DELETE {{studentinfo-url}}/20101320
 ###
 POST {{librarianinfo-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -114,6 +118,7 @@ Content-Type: application/json
 }
 ###
 POST {{librarianinfo-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -126,10 +131,13 @@ Content-Type: application/json
 }
 ###
 GET {{librarianinfo-url}}
+Authorization: Bearer {{auth-token}}
 ###
 GET {{librarianinfo-url}}/101
+Authorization: Bearer {{auth-token}}
 ###
 PUT {{librarianinfo-url}}/email/102
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -144,28 +152,34 @@ Content-Type: application/json
 }
 ###
 DELETE {{librarianinfo-url}}/102
+Authorization: Bearer {{auth-token}}
 ###
 
 POST {{librarian-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
     "username": "emily",
     "password": "ema",
-    "librarianId":101
+    "librarianId":101,
+    "role":"LIBRARIAN"
 }
 
 ###
 POST {{librarian-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
     "username": "brad",
     "password": "brad",
-    "librarianId":102
+    "librarianId":102,
+    "role":"LIBRARIAN"
 }
 ###
 GET {{librarian-url}}
+Authorization: Bearer {{auth-token}}
 ###
 GET {{librarian-url}}/101
 ###
@@ -176,7 +190,8 @@ Content-Type: application/json
     "password": "brady"
 }
 ###
-DELETE {{librarian-url}}/102
+DELETE {{librarian-url}}/101
+Authorization: Bearer {{auth-token}}
 
 ### STUDENT
 
