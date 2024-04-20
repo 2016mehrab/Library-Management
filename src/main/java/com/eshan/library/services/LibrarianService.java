@@ -43,8 +43,8 @@ public class LibrarianService {
     // TODO: create a response dto
     public Librarian findLibrarianById(Integer id) {
         LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
-
-        return librarianInfo.getLibrarian();
+        Librarian librarian = librarianRepository.findById(librarianInfo.getLibrarian().getId()).orElse(null);
+        return librarian;
     }
 
     // TODO: create a response dto

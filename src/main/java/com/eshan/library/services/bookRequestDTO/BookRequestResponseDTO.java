@@ -1,10 +1,17 @@
 package com.eshan.library.services.bookRequestDTO;
 
-public record BookRequestResponseDTO(
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-Integer studentId,
-Integer librarianId,
-String ISBN
-) {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class BookRequestResponseDTO {
+    private String isbn;
+    private Integer studentId;
+    private Integer librarianId;
 
 }
