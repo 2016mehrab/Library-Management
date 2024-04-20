@@ -44,10 +44,12 @@ public class StudentService {
 
 // TODO: create proper response dto
     public Student findStudentById(Integer id) {
-        StudentInfo studentInfo = studentInfoRepository.findById(id).orElse(null);
+        
+// TODO: delete these studentInfos as both share same id
+        // StudentInfo studentInfo = studentInfoRepository.findById(id).orElse(null);
 
-        // return studentInfo.getStudent();
-        return studentRepository.findById(studentInfo.getStudent().getId()).orElse(null);
+         return studentRepository.findById(id).orElse(null);
+        // return studentRepository.findById(studentInfo.getStudent().getId()).orElse(null);
     }
 
 // TODO: create proper response dto
@@ -56,9 +58,9 @@ public class StudentService {
     }
 
     public void delete(Integer id) {
-        StudentInfo studentInfo = studentInfoRepository.findById(id).orElse(null);
-        studentRepository.deleteById(studentInfo.getStudent().getId());
-        // studentRepository.deleteById();
+        // StudentInfo studentInfo = studentInfoRepository.findById(id).orElse(null);
+        // studentRepository.deleteById(studentInfo.getStudent().getId());
+        studentRepository.deleteById(id);
     }
 
     public void updatePassword(Student student, Integer id) {
