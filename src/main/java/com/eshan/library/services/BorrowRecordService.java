@@ -53,7 +53,7 @@ public class BorrowRecordService {
         }
         BookRequest BR = bookRequestRepository.findById(dto.bookRequestId()).orElse(null);
         if (BR != null) {
-            borrowRecord.setBookRequest(null);
+            borrowRecord.setBookRequest(BR);
         } else {
             throw new RuntimeException("Operation was not successful: BookRequest does not exist!");
         }

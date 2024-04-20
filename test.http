@@ -8,7 +8,7 @@
 
 @auth-url=http://127.0.0.1:8080/auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM2Mjg3NDIsImV4cCI6MTcxMzYzMDE4Mn0.FBMXSOVT-QjgiBzvKhNlAsXAFGaIq4TXL5MhVikvOKo
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM2MzE5NTQsImV4cCI6MTcxMzYzMzM5NH0.FbMEiImsUR6VNzAOd9faYVM011f5hhC3BLigXJpK1KQ
 ###
 POST {{auth-url}}/register
 Content-Type: application/json
@@ -162,8 +162,7 @@ Content-Type: application/json
 {
     "username": "emily",
     "password": "ema",
-    "librarianId":101,
-    "role":"LIBRARIAN"
+    "librarianId":101
 }
 
 ###
@@ -174,14 +173,14 @@ Content-Type: application/json
 {
     "username": "brad",
     "password": "brad",
-    "librarianId":102,
-    "role":"LIBRARIAN"
+    "librarianId":102
 }
 ###
 GET {{librarian-url}}
 Authorization: Bearer {{auth-token}}
 ###
 GET {{librarian-url}}/101
+Authorization: Bearer {{auth-token}}
 ###
 PUT {{librarian-url}}/102
 Content-Type: application/json
@@ -196,6 +195,7 @@ Authorization: Bearer {{auth-token}}
 ### STUDENT
 
 POST {{student-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -206,6 +206,7 @@ Content-Type: application/json
 
 ###
 POST {{student-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -215,6 +216,7 @@ Content-Type: application/json
 }
 ###
 GET {{student-url}}
+Authorization: Bearer {{auth-token}}
 ###
 GET {{student-url}}/20101498
 ###
@@ -231,6 +233,7 @@ DELETE {{student-url}}/20101320
 
 
 POST http://localhost:8080/books 
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -244,15 +247,19 @@ Content-Type: application/json
 }
 ###
 GET http://localhost:8080/books/1234567890 
+Authorization: Bearer {{auth-token}}
 ###
 GET http://localhost:8080/books 
+Authorization: Bearer {{auth-token}}
 
 
 ###
 DELETE http://localhost:8080/books/1234567890 HTTP/1.1
+Authorization: Bearer {{auth-token}}
 
 ###
 PUT http://localhost:8080/books/1234567890/quantity HTTP/1.1
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -261,6 +268,7 @@ Content-Type: application/json
 
 ###
 PUT http://localhost:8080/books/1234567890/coverlink HTTP/1.1
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -269,6 +277,7 @@ Content-Type: application/json
 
 ### BOOK REQUESTS
 POST  {{bookrequest-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -279,8 +288,10 @@ Content-Type: application/json
 
 ###
 GET {{bookrequest-url}}
+Authorization: Bearer {{auth-token}}
 ###
 PUT {{bookrequest-url}}/1/status
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -288,8 +299,9 @@ Content-Type: application/json
 }
 
 ###
-### BOOK REQUESTS
+### BORROW RECORDS
 POST  {{borrowrecord-url}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
@@ -300,4 +312,5 @@ Content-Type: application/json
 
 ###
 GET {{borrowrecord-url}}
+Authorization: Bearer {{auth-token}}
 ###
