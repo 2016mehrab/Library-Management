@@ -2,6 +2,7 @@ package com.eshan.library.auths;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,9 +39,19 @@ public class AuthenticationService {
         }
 
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
-                authenticationManager
-                                .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),
-                                                request.getPassword()));
+
+                try {
+                        authenticationManager
+                                        .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),
+                                                        request.getPassword()));
+                } catch (AuthenticationException e) {
+                        // Authentication failed
+                        // Handle the authentication failure, e.g., invalid credentials
+                        throw new RuntimeException("Authentication failed: " + e.getMessage());
+                }
+                // authenticationManager
+                // .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),
+                // request.getPassword()));
                 var admin = adminRepository.findByUsername(request.getUsername()).orElseThrow();
                 var jwtToken = jwtService.generateToken(admin);
                 return AuthenticationResponse.builder()

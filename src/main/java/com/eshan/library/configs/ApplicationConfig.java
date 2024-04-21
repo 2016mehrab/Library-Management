@@ -25,29 +25,55 @@ public class ApplicationConfig {
     private final LibrarianRepository librarianRepository;
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public UserDetailsService studentDetailsService() {
         return username -> studentRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("Student not found!"));
     }
+
     @Bean
     public UserDetailsService adminDetailsService() {
         return username -> adminRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("Admin not found!"));
     }
+
     @Bean
     public UserDetailsService librarianDetailsService() {
         return username -> librarianRepository.findByUsername(username).orElseThrow(
-            () -> new UsernameNotFoundException("Librarian not found!"));
-                
+                () -> new UsernameNotFoundException("Librarian not found!"));
+
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authProvider= new DaoAuthenticationProvider();
+    public AuthenticationProvider studentAuthenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(studentDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationProvider librarianAuthenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(librarianDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationProvider adminAuthenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(adminDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
+    // @Bean
+    // public AuthenticationProvider authenticationProvider(){
+    // DaoAuthenticationProvider authProvider= new DaoAuthenticationProvider();
+    // authProvider.setUserDetailsService(adminDetailsService());
+    // authProvider.setPasswordEncoder(passwordEncoder());
+    // return authProvider;
+    // }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

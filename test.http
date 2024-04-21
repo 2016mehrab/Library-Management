@@ -7,8 +7,29 @@
 @borrowrecord-url=http://127.0.0.1:8080/bookrecords
 
 @auth-url=http://127.0.0.1:8080/auth
+@sauth-url=http://127.0.0.1:8080/student-auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM2MzE5NTQsImV4cCI6MTcxMzYzMzM5NH0.FbMEiImsUR6VNzAOd9faYVM011f5hhC3BLigXJpK1KQ
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM3MTUwODMsImV4cCI6MTcxMzcxNjUyM30.jmuCLMqwc-XR0SqFiC9DPjrS2Nk-5arIgndpXHMOH-8
+@sauth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6ImFzaCIsImlhdCI6MTcxMzcxMjczNSwiZXhwIjoxNzEzNzE0MTc1fQ.PULjdq3KThW8j2PK1DnL4QBikgHTymeS8r51lJW1SIo
+###
+POST {{sauth-url}}/register
+Content-Type: application/json
+
+{
+    "username": "ash",
+    "password": "ashen",
+    "studentId":20101498
+}
+###
+###
+POST {{sauth-url}}/authenticate
+Content-Type: application/json
+
+{
+    "username": "ash",
+    "password": "ashen"
+}
+###
 ###
 POST {{auth-url}}/register
 Content-Type: application/json
@@ -195,7 +216,7 @@ Authorization: Bearer {{auth-token}}
 ### STUDENT
 
 POST {{student-url}}
-Authorization: Bearer {{auth-token}}
+Authorization: Bearer {{sauth-token}}
 Content-Type: application/json
 
 {
@@ -216,7 +237,7 @@ Content-Type: application/json
 }
 ###
 GET {{student-url}}
-Authorization: Bearer {{auth-token}}
+Authorization: Bearer {{sauth-token}}
 ###
 GET {{student-url}}/20101498
 ###
@@ -277,7 +298,7 @@ Content-Type: application/json
 
 ### BOOK REQUESTS
 POST  {{bookrequest-url}}
-Authorization: Bearer {{auth-token}}
+Authorization: Bearer {{sauth-token}}
 Content-Type: application/json
 
 {

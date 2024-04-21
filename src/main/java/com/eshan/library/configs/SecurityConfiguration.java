@@ -20,20 +20,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
         private final JwtAuthenticationFilter jwtAuthFilter;
-        private final AuthenticationProvider authenticationProvider;
+        private final AuthenticationProvider studentAuthenticationProvider;
+        private final AuthenticationProvider librarianAuthenticationProvider;
+        private final AuthenticationProvider adminAuthenticationProvider;
+
+        @Bean
+        public AuthenticationProvider delegatingAuthenticationProvider() {
+                return new DelegatingAuthenticationProvider(studentAuthenticationProvider,
+                                librarianAuthenticationProvider, adminAuthenticationProvider);
+        }
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
                 httpSecurity.csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(requests -> requests
                                                 .requestMatchers("/auth/**").permitAll()
+                                                .requestMatchers("/student-auth/**").permitAll()
+                                                // .requestMatchers("/student-auth/**").permitAll()
                                                 .requestMatchers("/students/**").hasAnyAuthority("STUDENT", "ADMIN")
                                                 .requestMatchers("/librarian/**").hasAnyAuthority("LIBRARIAN", "ADMIN")
                                                 .requestMatchers("/**").hasAuthority("ADMIN")
                                                 .anyRequest().authenticated())
                                 .sessionManagement(management -> management
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .authenticationProvider(authenticationProvider)
+                                .authenticationProvider(delegatingAuthenticationProvider())
+                                // .authenticationProvider(librarianAuthenticationProvider)
+                                // .authenticationProvider(adminAuthenticationProvider)
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
                 return httpSecurity.build();
         }
