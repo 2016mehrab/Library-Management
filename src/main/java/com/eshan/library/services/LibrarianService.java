@@ -2,6 +2,7 @@ package com.eshan.library.services;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.eshan.library.models.Librarian;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 public class LibrarianService {
     private final LibrarianRepository librarianRepository;
     private final LibrarianInfoRepository librarianInfoRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Librarian saveLibrarian(LibrarianDTO librarianDTO) {
         var librarian = toLibrarian(librarianDTO);
@@ -26,8 +28,8 @@ public class LibrarianService {
     private Librarian toLibrarian(LibrarianDTO librarianDTO) {
         var librarian = new Librarian();
 
-        librarian.setUsername(librarianDTO.username());
-        librarian.setPassword(librarianDTO.password());
+        librarian.setUsername("L_"+librarianDTO.username());
+        librarian.setPassword(passwordEncoder.encode(librarianDTO.password())) ;
         librarian.setRole(Role.LIBRARIAN);
 
         LibrarianInfo librarianInfo = librarianInfoRepository.findById(librarianDTO.librarianId()).orElse(null);

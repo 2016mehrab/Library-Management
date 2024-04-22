@@ -1,35 +1,17 @@
+### /usr/bin/env /usr/lib/jvm/java-17-openjdk-amd64/bin/java @/tmp/cp_ejz6d0trlumqqaelmb68ohehf.argfile com.eshan.library.LibraryApplication > log.txt 
 @admin-url = http://127.0.0.1:8080/admins
 @librarianinfo-url =http://127.0.0.1:8080/librarianinfo 
 @librarian-url = http://127.0.0.1:8080/librarians
 @student-url = http://127.0.0.1:8080/students
 @bookrequest-url=http://127.0.0.1:8080/bookrequests
 
-@borrowrecord-url=http://127.0.0.1:8080/bookrecords
+@borrowrecord-url=http://127.0.0.1:8080/borrowrecords
 
 @auth-url=http://127.0.0.1:8080/auth
 @sauth-url=http://127.0.0.1:8080/student-auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJtZWhyYWIiLCJpYXQiOjE3MTM3MTUwODMsImV4cCI6MTcxMzcxNjUyM30.jmuCLMqwc-XR0SqFiC9DPjrS2Nk-5arIgndpXHMOH-8
-@sauth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6ImFzaCIsImlhdCI6MTcxMzcxMjczNSwiZXhwIjoxNzEzNzE0MTc1fQ.PULjdq3KThW8j2PK1DnL4QBikgHTymeS8r51lJW1SIo
-###
-POST {{sauth-url}}/register
-Content-Type: application/json
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTcxMzc5MDQ5NiwiZXhwIjoxNzEzNzkxOTM2fQ.ngTgW54j-dj-1SAMXx25ZoY0sdEChpE-STaPysG7AQ4
 
-{
-    "username": "ash",
-    "password": "ashen",
-    "studentId":20101498
-}
-###
-###
-POST {{sauth-url}}/authenticate
-Content-Type: application/json
-
-{
-    "username": "ash",
-    "password": "ashen"
-}
-###
 ###
 POST {{auth-url}}/register
 Content-Type: application/json
@@ -213,43 +195,6 @@ Content-Type: application/json
 DELETE {{librarian-url}}/101
 Authorization: Bearer {{auth-token}}
 
-### STUDENT
-
-POST {{student-url}}
-Authorization: Bearer {{sauth-token}}
-Content-Type: application/json
-
-{
-    "username": "britt",
-    "password": "brt",
-    "studentId":20101320
-}
-
-###
-POST {{student-url}}
-Authorization: Bearer {{auth-token}}
-Content-Type: application/json
-
-{
-    "username": "ash",
-    "password": "ashen",
-    "studentId":20101498
-}
-###
-GET {{student-url}}
-Authorization: Bearer {{sauth-token}}
-###
-GET {{student-url}}/20101498
-###
-PUT {{student-url}}/20101320
-Content-Type: application/json
-
-{
-    "password": "brot"
-}
-###
-DELETE {{student-url}}/20101320
-###
 ### BOOK
 
 
@@ -298,7 +243,7 @@ Content-Type: application/json
 
 ### BOOK REQUESTS
 POST  {{bookrequest-url}}
-Authorization: Bearer {{sauth-token}}
+Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {

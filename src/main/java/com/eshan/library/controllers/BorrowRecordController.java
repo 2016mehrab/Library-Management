@@ -21,7 +21,7 @@ import com.eshan.library.services.borrowRecordDTO.BorrowRecordDTO;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/bookrecords")
+@RequestMapping("/borrowrecords")
 @AllArgsConstructor
 public class BorrowRecordController {
     private final BorrowRecordService borrowRecordService;

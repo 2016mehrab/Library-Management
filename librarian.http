@@ -1,0 +1,42 @@
+@auth-url=http://127.0.0.1:8080/librarian-auth
+@librarian-url=http://127.0.0.1:8080/librarians
+@book-url=http://localhost:8080/books 
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9lbWlseSIsImlhdCI6MTcxMzc5MDUyOCwiZXhwIjoxNzEzNzkxOTY4fQ.h9yuR5lC7jiDDJlpd1FfMhR2Gji1wNq-WQcwKDRRxCY
+
+###
+###
+POST {{auth-url}}/register
+Content-Type: application/json
+
+{
+    "username": "emily",
+    "password": "emlem",
+    "librarianId":101
+}
+###
+###
+POST {{auth-url}}/authenticate
+Content-Type: application/json
+
+{
+    "username": "emily",
+    "password": "emlem"
+}
+######
+GET {{librarian-url}}
+Authorization: Bearer {{auth-token}}
+###
+### BOOK
+POST  {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "1234567890",
+    "title": "Prochur Koshto II",
+    "quantity": 2,
+    "price": 39.99,
+    "coverLink": "http://dummylink2.com",
+    "categories": ["Fantasy", "Action"],
+    "authors": ["Monsur", "Mirsil"]
+}

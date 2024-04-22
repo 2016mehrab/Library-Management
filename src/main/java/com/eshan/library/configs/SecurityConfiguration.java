@@ -27,8 +27,12 @@ public class SecurityConfiguration {
                                 .authorizeHttpRequests(requests -> requests
                                                 .requestMatchers("/auth/**").permitAll()
                                                 .requestMatchers("/student-auth/**").permitAll()
+                                                .requestMatchers("/librarian-auth/**").permitAll()
                                                 .requestMatchers("/students/**").hasAnyAuthority("STUDENT", "ADMIN")
-                                                .requestMatchers("/librarian/**").hasAnyAuthority("LIBRARIAN", "ADMIN")
+                                                .requestMatchers("/librarians/**").hasAnyAuthority("LIBRARIAN", "ADMIN")
+                                                .requestMatchers("/books/**").hasAnyAuthority("LIBRARIAN", "STUDENT","ADMIN")
+                                                .requestMatchers("/bookrequests/**").hasAnyAuthority("LIBRARIAN", "STUDENT","ADMIN")
+                                                .requestMatchers("/borrowrecords/**").hasAnyAuthority("LIBRARIAN", "STUDENT","ADMIN")
                                                 .requestMatchers("/**").hasAuthority("ADMIN")
                                                 .anyRequest().authenticated())
                                 .sessionManagement(management -> management

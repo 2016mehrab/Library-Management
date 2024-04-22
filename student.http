@@ -1,0 +1,64 @@
+@student-url = http://127.0.0.1:8080/students
+@bookrequest-url=http://127.0.0.1:8080/bookrequests
+
+@borrowrecord-url=http://127.0.0.1:8080/borrowrecords
+
+@auth-url=http://127.0.0.1:8080/student-auth
+
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTcxMzc4OTkwMSwiZXhwIjoxNzEzNzkxMzQxfQ.3oLbK7uoj5JJ_UPIqtTGpuK3zIUCUKFZOOYWlbkgj50
+###
+POST {{auth-url}}/register
+Content-Type: application/json
+
+{
+    "username": "ash",
+    "password": "ashen",
+    "studentId":20101498
+}
+###
+###
+POST {{auth-url}}/authenticate
+Content-Type: application/json
+
+{
+    "username": "ash",
+    "password": "ashen"
+}
+###
+### STUDENT
+
+POST {{student-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "username": "britt",
+    "password": "brt",
+    "studentId":20101320
+}
+
+###
+POST {{student-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "username": "ash",
+    "password": "ashen",
+    "studentId":20101498
+}
+###
+GET {{student-url}}
+Authorization: Bearer {{auth-token}}
+###
+GET {{student-url}}/20101498
+###
+PUT {{student-url}}/20101320
+Content-Type: application/json
+
+{
+    "password": "brot"
+}
+###
+DELETE {{student-url}}/20101320
+###
