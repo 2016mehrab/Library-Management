@@ -44,36 +44,27 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AuthenticationProvider studentAuthenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(studentDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+    public UserDetailsService userDetailsService() {
+        return username -> {
+            if (username.startsWith("S_")) {
+                return studentDetailsService().loadUserByUsername(username);
+            } else if (username.startsWith("L_")) {
+                return librarianDetailsService().loadUserByUsername(username);
+            } else if (username.startsWith("A_")) {
+                return adminDetailsService().loadUserByUsername(username);
+            } else {
+                throw new RuntimeException("AuthenticationProvider failed to find user with that Prefix!");
+            }
+        };
     }
 
     @Bean
-    public AuthenticationProvider librarianAuthenticationProvider() {
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(librarianDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(userDetailsService());
         return authProvider;
     }
-
-    @Bean
-    public AuthenticationProvider adminAuthenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(adminDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    // @Bean
-    // public AuthenticationProvider authenticationProvider(){
-    // DaoAuthenticationProvider authProvider= new DaoAuthenticationProvider();
-    // authProvider.setUserDetailsService(adminDetailsService());
-    // authProvider.setPasswordEncoder(passwordEncoder());
-    // return authProvider;
-    // }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

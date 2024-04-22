@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,15 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
         private final JwtAuthenticationFilter jwtAuthFilter;
-        private final AuthenticationProvider studentAuthenticationProvider;
-        private final AuthenticationProvider librarianAuthenticationProvider;
-        private final AuthenticationProvider adminAuthenticationProvider;
-
-        @Bean
-        public AuthenticationProvider delegatingAuthenticationProvider() {
-                return new DelegatingAuthenticationProvider(studentAuthenticationProvider,
-                                librarianAuthenticationProvider, adminAuthenticationProvider);
-        }
+        private final AuthenticationProvider authenticationProvider;
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -36,16 +27,13 @@ public class SecurityConfiguration {
                                 .authorizeHttpRequests(requests -> requests
                                                 .requestMatchers("/auth/**").permitAll()
                                                 .requestMatchers("/student-auth/**").permitAll()
-                                                // .requestMatchers("/student-auth/**").permitAll()
                                                 .requestMatchers("/students/**").hasAnyAuthority("STUDENT", "ADMIN")
                                                 .requestMatchers("/librarian/**").hasAnyAuthority("LIBRARIAN", "ADMIN")
                                                 .requestMatchers("/**").hasAuthority("ADMIN")
                                                 .anyRequest().authenticated())
                                 .sessionManagement(management -> management
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .authenticationProvider(delegatingAuthenticationProvider())
-                                // .authenticationProvider(librarianAuthenticationProvider)
-                                // .authenticationProvider(adminAuthenticationProvider)
+                                .authenticationProvider(authenticationProvider)
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
                 return httpSecurity.build();
         }

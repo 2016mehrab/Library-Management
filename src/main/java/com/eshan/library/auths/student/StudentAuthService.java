@@ -27,11 +27,6 @@ public class StudentAuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(StudentDTO request) {
-        // var student = Student.builder()
-        //         .username(request.getUsername())
-        //         .password(passwordEncoder.encode(request.getPassword()))
-        //         .role(Role.STUDENT)
-        //         .build();
         var student = studentService.save(request);
         var jwtToken = jwtService.generateToken(student);
         return AuthenticationResponse.builder()
@@ -41,17 +36,21 @@ public class StudentAuthService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),
+                .authenticate(new UsernamePasswordAuthenticationToken(addStudentPrefix(request.getUsername()),
                         request.getPassword()));
-        var student = studentRepository.findByUsername(request.getUsername());
-        if(student.isPresent()){
-        var jwtToken = jwtService.generateToken(student.get());
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        var student = studentRepository.findByUsername(addStudentPrefix(request.getUsername()));
+        if (student.isPresent()) {
+            var jwtToken = jwtService.generateToken(student.get());
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .build();
         }
         return null;
 
+    }
+
+    private String addStudentPrefix(String username) {
+        return "S_" + username;
     }
 
 }

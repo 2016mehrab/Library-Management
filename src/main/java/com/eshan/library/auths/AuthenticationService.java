@@ -27,7 +27,7 @@ public class AuthenticationService {
 
         public AuthenticationResponse register(RegisterRequest request) {
                 var admin = Admin.builder()
-                                .username(request.getUsername())
+                                .username("A_" + request.getUsername())
                                 .password(passwordEncoder.encode(request.getPassword()))
                                 .role(Role.ADMIN)
                                 .build();
@@ -42,21 +42,21 @@ public class AuthenticationService {
 
                 try {
                         authenticationManager
-                                        .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),
+                                        .authenticate(new UsernamePasswordAuthenticationToken(
+                                                        addAdminPrefix(request.getUsername()),
                                                         request.getPassword()));
                 } catch (AuthenticationException e) {
-                        // Authentication failed
-                        // Handle the authentication failure, e.g., invalid credentials
                         throw new RuntimeException("Authentication failed: " + e.getMessage());
                 }
-                // authenticationManager
-                // .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),
-                // request.getPassword()));
-                var admin = adminRepository.findByUsername(request.getUsername()).orElseThrow();
+                var admin = adminRepository.findByUsername(addAdminPrefix(request.getUsername())).orElseThrow();
                 var jwtToken = jwtService.generateToken(admin);
                 return AuthenticationResponse.builder()
                                 .token(jwtToken)
                                 .build();
+        }
+
+        private String addAdminPrefix(String username) {
+                return "A_" + username; // Add "A_" prefix
         }
 
 }
