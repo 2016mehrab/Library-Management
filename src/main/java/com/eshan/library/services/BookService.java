@@ -13,6 +13,7 @@ import com.eshan.library.repositories.AuthorRepository;
 import com.eshan.library.repositories.BookRepository;
 import com.eshan.library.repositories.CategoryRepository;
 import com.eshan.library.services.bookDTO.BookDTO;
+import com.eshan.library.services.bookDTO.BookResponseDTO;
 import com.eshan.library.services.bookDTO.CoverLinkUpdateDTO;
 import com.eshan.library.services.bookDTO.QuantityUpdateDTO;
 
@@ -45,22 +46,22 @@ public class BookService {
         book.setCoverLink(dto.coverLink());
 
         List<Category> categories = dto.categories().stream()
-        .map(name -> categoryRepository.findByName(name)
-        .orElseGet(() -> {
-        Category newCategory = new Category();
-        newCategory.setName(name);
-        return categoryRepository.save(newCategory);
-        }))
-        .collect(Collectors.toList());
+                .map(name -> categoryRepository.findByName(name)
+                        .orElseGet(() -> {
+                            Category newCategory = new Category();
+                            newCategory.setName(name);
+                            return categoryRepository.save(newCategory);
+                        }))
+                .collect(Collectors.toList());
 
         List<Author> authors = dto.authors().stream()
-        .map(name -> authorRepository.findByName(name)
-        .orElseGet(() -> {
-        Author newAuthor = new Author();
-        newAuthor.setName(name);
-        return authorRepository.save(newAuthor);
-        }))
-        .collect(Collectors.toList());
+                .map(name -> authorRepository.findByName(name)
+                        .orElseGet(() -> {
+                            Author newAuthor = new Author();
+                            newAuthor.setName(name);
+                            return authorRepository.save(newAuthor);
+                        }))
+                .collect(Collectors.toList());
 
         book.setAuthors(authors);
         book.setCategories(categories);
@@ -68,19 +69,45 @@ public class BookService {
 
     }
 
-    public Book findByIsbn(String isbn) {
+    private BookResponseDTO toBookResponseDTO(Book book) {
+        return new BookResponseDTO(
+                book.getIsbn(),
+                book.getTitle(),
+                book.getQuantity(),
+                book.getPrice(),
+                book.getCoverLink(),
+                book.getCategories().stream().map(Category::getName).collect(Collectors.toList()),
+                book.getAuthors().stream().map(Author::getName).collect(Collectors.toList()));
+    }
+
+    public BookResponseDTO findByIsbn(String isbn) {
         Optional<Book> optionalBook = bookRepository.findByIsbn(isbn);
         if (optionalBook.isPresent()) {
-            return optionalBook.get();
+            return toBookResponseDTO(optionalBook.get());
         } else {
             throw new RuntimeException("Operation was not successful: Book does not exist!");
         }
-
     }
 
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<BookResponseDTO> findAll() {
+        return bookRepository.findAll().stream()
+                .map(this::toBookResponseDTO)
+                .collect(Collectors.toList());
     }
+
+    // public Book findByIsbn(String isbn) {
+    //     Optional<Book> optionalBook = bookRepository.findByIsbn(isbn);
+    //     if (optionalBook.isPresent()) {
+    //         return optionalBook.get();
+    //     } else {
+    //         throw new RuntimeException("Operation was not successful: Book does not exist!");
+    //     }
+
+    // }
+
+    // public List<Book> findAll() {
+    //     return bookRepository.findAll();
+    // }
 
     public void delete(String isbn) {
         bookRepository.deleteByIsbn(isbn);

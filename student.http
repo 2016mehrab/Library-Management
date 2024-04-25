@@ -5,7 +5,7 @@
 
 @auth-url=http://127.0.0.1:8080/student-auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTcxMzc4OTkwMSwiZXhwIjoxNzEzNzkxMzQxfQ.3oLbK7uoj5JJ_UPIqtTGpuK3zIUCUKFZOOYWlbkgj50
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6IlNfYXNoIiwiaWF0IjoxNzEzODQyMDIwLCJleHAiOjE3MTM4NDM0NjB9.Y8EfqdNn5K-Xh9KkuohL82ZFGvoEeAwAzX8nCGMSf5k
 ###
 POST {{auth-url}}/register
 Content-Type: application/json

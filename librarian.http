@@ -27,6 +27,78 @@ GET {{librarian-url}}
 Authorization: Bearer {{auth-token}}
 ###
 ### BOOK
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "1234567880",
+    "title": "Prochur Koshto I",
+    "quantity": 4,
+    "price": 29.99,
+    "coverLink": "http://dummylink9.com",
+    "categories": ["Horror", "Romance"],
+    "authors": ["Monsur", "Atik"]
+}
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "1234567892",
+    "title": "Britha",
+    "quantity": 1,
+    "price": 19.99,
+    "coverLink": "http://aummylink2.com",
+    "categories": ["Romance", "Thriller"],
+    "authors": ["Arnil", "Saikat"]
+}
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "6677889900",
+    "title": "To Kill a Mockingbird",
+    "quantity": 5,
+    "price": 10.99,
+    "coverLink": "http://dummylink3.com",
+    "categories": ["Classic", "Drama"],
+    "authors": ["Harper", "Lee"]
+}
+###
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+        "isbn": "1122334455",
+        "title": "The Great Gatsby",
+        "quantity": 2,
+        "price": 15.99,
+        "coverLink": "http://dummylink2.com",
+        "categories": ["Classic", "Novel"],
+        "authors": ["F. Scott", "Fitzgerald"]
+}
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "9876543210",
+    "title": "The Lost World",
+    "quantity": 3,
+    "price": 25.99,
+    "coverLink": "http://dummylink1.com",
+    "categories": ["Adventure", "Sci-Fi"],
+    "authors": ["John", "Doe"]
+}
+###
 POST  {{book-url}}
 Authorization: Bearer {{auth-token}}
 Content-Type: application/json

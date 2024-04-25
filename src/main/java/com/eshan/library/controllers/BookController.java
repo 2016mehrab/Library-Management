@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eshan.library.models.Book;
 import com.eshan.library.services.BookService;
 import com.eshan.library.services.bookDTO.BookDTO;
+import com.eshan.library.services.bookDTO.BookResponseDTO;
 import com.eshan.library.services.bookDTO.CoverLinkUpdateDTO;
 import com.eshan.library.services.bookDTO.QuantityUpdateDTO;
 
@@ -25,6 +27,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/books")
 @AllArgsConstructor
+@CrossOrigin
 public class BookController {
     private final BookService bookService;
 
@@ -39,17 +42,28 @@ public class BookController {
         }
     }
 
-    @GetMapping("{Id}")
-    public Book findById(@PathVariable("Id") String isbn) {
+    // @GetMapping("{Id}")
+    // public Book findById(@PathVariable("Id") String isbn) {
+    //     return bookService.findByIsbn(isbn);
+    // }
+
+    // // TODO: Implement response DTO
+    // @GetMapping
+    // public List<Book> findAll() {
+
+    //     return bookService.findAll();
+    // }
+
+        @GetMapping("{Id}")
+    public BookResponseDTO findById(@PathVariable("Id") String isbn) {
         return bookService.findByIsbn(isbn);
     }
 
-    // TODO: Implement response DTO
     @GetMapping
-    public List<Book> findAll() {
-
+    public List<BookResponseDTO> findAll() {
         return bookService.findAll();
     }
+
 
     @DeleteMapping("{Id}")
     @ResponseStatus(HttpStatus.OK)

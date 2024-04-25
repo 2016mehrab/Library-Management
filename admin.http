@@ -10,7 +10,7 @@
 @auth-url=http://127.0.0.1:8080/auth
 @sauth-url=http://127.0.0.1:8080/student-auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTcxMzc5MDQ5NiwiZXhwIjoxNzEzNzkxOTM2fQ.ngTgW54j-dj-1SAMXx25ZoY0sdEChpE-STaPysG7AQ4
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTcxMzg1NzE5NywiZXhwIjoxNzEzODU4NjM3fQ.DgsCkTPoeEQSQ68zlsXNxHbfIFkoXUwyS4ZBRJsRaVQ
 
 ###
 POST {{auth-url}}/register
@@ -196,9 +196,10 @@ DELETE {{librarian-url}}/101
 Authorization: Bearer {{auth-token}}
 
 ### BOOK
+@book-url=http://localhost:8080/books 
 
-
-POST http://localhost:8080/books 
+###
+POST {{book-url}}
 Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
@@ -208,11 +209,83 @@ Content-Type: application/json
     "quantity": 2,
     "price": 39.99,
     "coverLink": "http://dummylink2.com",
-    "categories": ["Fantasy", "Action"],
+    "categories": ["Drama", "Action"],
     "authors": ["Monsur", "Mirsil"]
 }
 ###
-GET http://localhost:8080/books/1234567890 
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "1234567880",
+    "title": "Prochur Koshto I",
+    "quantity": 4,
+    "price": 29.99,
+    "coverLink": "http://dummylink9.com",
+    "categories": ["Horror", "Romance"],
+    "authors": ["Monsur", "Atik"]
+}
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "1234567892",
+    "title": "Britha",
+    "quantity": 1,
+    "price": 19.99,
+    "coverLink": "http://aummylink2.com",
+    "categories": ["Romance", "Thriller"],
+    "authors": ["Arnil", "Saikat"]
+}
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "6677889900",
+    "title": "To Kill a Mockingbird",
+    "quantity": 5,
+    "price": 10.99,
+    "coverLink": "http://dummylink3.com",
+    "categories": ["Classic", "Drama"],
+    "authors": ["Harper", "Lee"]
+}
+###
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+        "isbn": "1122334455",
+        "title": "The Great Gatsby",
+        "quantity": 2,
+        "price": 15.99,
+        "coverLink": "http://dummylink2.com",
+        "categories": ["Classic", "Novel"],
+        "authors": ["F. Scott", "Fitzgerald"]
+}
+###
+POST {{book-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "9876543210",
+    "title": "The Lost World",
+    "quantity": 3,
+    "price": 25.99,
+    "coverLink": "http://dummylink1.com",
+    "categories": ["Adventure", "Sci-Fi"],
+    "authors": ["John", "Doe"]
+}
+###
+GET http://localhost:8080/books/9876543210
 Authorization: Bearer {{auth-token}}
 ###
 GET http://localhost:8080/books 
