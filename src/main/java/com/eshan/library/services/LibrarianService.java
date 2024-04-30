@@ -52,7 +52,7 @@ public class LibrarianService {
 
     private LibrarianResponseDTO toLibrarianResponseDTO(Librarian lib) {
         return new LibrarianResponseDTO(
-                lib.getId());
+                lib.getLibrarianInfo().getId());
     }
 
     public List<LibrarianResponseDTO> findAllLibrarian() {
