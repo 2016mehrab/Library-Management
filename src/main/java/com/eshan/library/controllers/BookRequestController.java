@@ -39,6 +39,10 @@ public class BookRequestController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping
+        public List<BookRequestResponseDTO> findAll() {
+            return bookRequestService.findAll();
+    }
 
     @GetMapping("{Id}")
     public ResponseEntity<BookRequestResponseDTO> findbyId(@PathVariable ("Id") Integer id) {

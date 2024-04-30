@@ -2,6 +2,7 @@ package com.eshan.library.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -105,8 +106,12 @@ public class BookRequestService {
         else return null;
     }
 
-    public List<BookRequest> findAll() {
-        return bookRequestRepository.findAll();
+    // public List<BookRequest> findAll() {
+    //     return bookRequestRepository.findAll();
+
+    // }
+    public List<BookRequestResponseDTO> findAll() {
+        return bookRequestRepository.findAll().stream().map(this::toBookRequestResponseDTO).collect(Collectors.toList());
 
     }
 
