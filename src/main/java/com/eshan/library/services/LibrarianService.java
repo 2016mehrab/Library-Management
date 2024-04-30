@@ -1,6 +1,7 @@
 package com.eshan.library.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,8 @@ public class LibrarianService {
     private Librarian toLibrarian(LibrarianDTO librarianDTO) {
         var librarian = new Librarian();
 
-        librarian.setUsername("L_"+librarianDTO.username());
-        librarian.setPassword(passwordEncoder.encode(librarianDTO.password())) ;
+        librarian.setUsername("L_" + librarianDTO.username());
+        librarian.setPassword(passwordEncoder.encode(librarianDTO.password()));
         librarian.setRole(Role.LIBRARIAN);
 
         LibrarianInfo librarianInfo = librarianInfoRepository.findById(librarianDTO.librarianId()).orElse(null);
@@ -49,10 +50,15 @@ public class LibrarianService {
         return librarian;
     }
 
-    // TODO: create a response dto
-    public List<Librarian> findAllLibrarian() {
-        return librarianRepository.findAll();
+    private LibrarianResponseDTO toLibrarianResponseDTO(Librarian lib) {
+        return new LibrarianResponseDTO(
+                lib.getId());
     }
+
+    public List<LibrarianResponseDTO> findAllLibrarian() {
+        return librarianRepository.findAll().stream().map(this::toLibrarianResponseDTO).collect(Collectors.toList());
+    }
+
 
     public void deleteLibrarian(Integer id) {
         LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);

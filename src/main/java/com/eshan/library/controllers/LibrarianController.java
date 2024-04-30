@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eshan.library.models.Librarian;
 import com.eshan.library.services.LibrarianDTO;
+import com.eshan.library.services.LibrarianResponseDTO;
 import com.eshan.library.services.LibrarianService;
 
 import lombok.AllArgsConstructor;
@@ -45,7 +46,7 @@ public class LibrarianController {
     }
 
     @GetMapping
-    public List<Librarian> findAllStudentInfo() {
+    public List<LibrarianResponseDTO> findAllStudentInfo() {
         return librarianService.findAllLibrarian();
     }
 
