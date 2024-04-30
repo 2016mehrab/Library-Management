@@ -55,6 +55,7 @@ public class SecurityConfiguration {
                                                 .requestMatchers("/librarians/**").hasAnyAuthority("LIBRARIAN", "ADMIN")
                                                 .requestMatchers(HttpMethod.GET, "/books").hasAnyAuthority("STUDENT", "LIBRARIAN", "ADMIN")
                                                 .requestMatchers("/books/**").hasAnyAuthority("LIBRARIAN", "ADMIN")
+                                                .requestMatchers(HttpMethod.PUT, "/bookrequests").hasAnyAuthority( "LIBRARIAN", "ADMIN")
                                                 .requestMatchers("/bookrequests/**").hasAnyAuthority("LIBRARIAN", "STUDENT","ADMIN")
                                                 .requestMatchers("/borrowrecords/**").hasAnyAuthority("LIBRARIAN", "STUDENT","ADMIN")
                                                 .requestMatchers("/**").hasAuthority("ADMIN")

@@ -77,21 +77,27 @@ public class BookRequestService {
         return bookRequest;
     }
 
-    private BookRequestResponseDTO toBookRequestResponseDTO(BookRequestDTO bookRequestDTO) {
-        Optional<Book> book = bookRepository.findByIsbn(bookRequestDTO.isbn());
-        Optional<Student> student = studentRepository.findById(bookRequestDTO.studentId());
-        Librarian librarian = librarianService.findLibrarianById(bookRequestDTO.librarianId());
+    // private BookRequestResponseDTO toBookRequestResponseDTO(BookRequestDTO
+    // bookRequestDTO) {
+    // Optional<Book> book = bookRepository.findByIsbn(bookRequestDTO.isbn());
+    // Optional<Student> student =
+    // studentRepository.findById(bookRequestDTO.studentId());
+    // Librarian librarian =
+    // librarianService.findLibrarianById(bookRequestDTO.librarianId());
 
-        if (book.isPresent() && student.isPresent() && librarian != null) {
-            return BookRequestResponseDTO.builder().isbn(bookRequestDTO.isbn())
-                    .librarianId(bookRequestDTO.librarianId())
-                    .studentId(bookRequestDTO.studentId())
-                    .build();
-        }
-        else{
-            throw new RuntimeException("Operation was not successful: Librarian Not Found!");
-        }
-    }
+    // if (book.isPresent() && student.isPresent() && librarian != null) {
+    // return BookRequestResponseDTO.builder().isbn(bookRequestDTO.isbn())
+    // .librarianId(bookRequestDTO.librarianId())
+    // .studentId(bookRequestDTO.studentId())
+    // .status(book.ge)
+    // .build();
+    // }
+    // else{
+    // throw new RuntimeException("Operation was not successful: Librarian Not
+    // Found!");
+    // }
+    // }
+
     private BookRequestResponseDTO toBookRequestResponseDTO(BookRequest br) {
         Optional<Book> book = bookRepository.findByIsbn(br.getBook().getIsbn());
         Optional<Student> student = studentRepository.findById(br.getStudent().getId());
@@ -101,25 +107,27 @@ public class BookRequestService {
             return BookRequestResponseDTO.builder().isbn(book.get().getIsbn())
                     .librarianId(librarian.getLibrarianInfo().getId())
                     .studentId(student.get().getId())
+                    .id(br.getId())
+                    .status(br.getApproveStatus())
                     .build();
-        }
-        else return null;
+        } else
+            return null;
     }
 
     // public List<BookRequest> findAll() {
-    //     return bookRequestRepository.findAll();
+    // return bookRequestRepository.findAll();
 
     // }
     public List<BookRequestResponseDTO> findAll() {
-        return bookRequestRepository.findAll().stream().map(this::toBookRequestResponseDTO).collect(Collectors.toList());
+        return bookRequestRepository.findAll().stream().map(this::toBookRequestResponseDTO)
+                .collect(Collectors.toList());
 
     }
 
-    public BookRequestResponseDTO findById(Integer id){
-        if(bookRequestRepository.findById(id).isPresent()){
-            return toBookRequestResponseDTO(bookRequestRepository.findById(id).get()) ;
-        }
-        else{
+    public BookRequestResponseDTO findById(Integer id) {
+        if (bookRequestRepository.findById(id).isPresent()) {
+            return toBookRequestResponseDTO(bookRequestRepository.findById(id).get());
+        } else {
             throw new RuntimeException("Operation was not successful: Book request doesnot exist");
         }
 

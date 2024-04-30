@@ -58,7 +58,7 @@ public class BookRequestController {
 
     @PutMapping("{Id}/status")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BookRequest> updateCoverLink(@RequestBody StatusUpdateDTO dto,
+    public ResponseEntity<BookRequest> updateStatus(@RequestBody StatusUpdateDTO dto,
             @PathVariable("Id") Integer id) {
         try {
             bookRequestService.updateStatus(dto, id);
