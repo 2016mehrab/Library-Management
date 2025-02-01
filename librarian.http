@@ -1,7 +1,8 @@
 @auth-url=http://127.0.0.1:8080/librarian-auth
 @librarian-url=http://127.0.0.1:8080/librarians
 @book-url=http://localhost:8080/books 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3Mzg0MDM0MDEsImV4cCI6MTczODQ4OTgwMX0.euXf9ZpIkU9WAOpJOWWyNn7T64hh_s8tT2R2novm9dc
+@bookrequest-url=http://127.0.0.1:8080/bookrequests
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3Mzg0MjY0MTMsImV4cCI6MTczODUxMjgxM30.1d3nALtEp9wqFYMo-VFznur4OhzCYax3_bgHvvbK17s
 @student-auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6IlNfbm9vciIsImlhdCI6MTczODQwMzUwOSwiZXhwIjoxNzM4NDg5OTA5fQ.Vef5K7UuTo2EQ0OTl43_hiBIcl-PFlIhWyGlIVFj2JU
 
 ###
@@ -116,3 +117,34 @@ Content-Type: application/json
 ###
 GET {{book-url}}
 Authorization: Bearer {{student-auth-token}}
+
+### REVIEWING BOOKSREQUESTS
+GET {{bookrequest-url}}
+Authorization: Bearer {{auth-token}}
+### 
+GET {{bookrequest-url}}/1
+Authorization: Bearer {{auth-token}}
+###  REJECTING BOOK REQUEST
+PUT {{bookrequest-url}}/1/status
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "approveStatus":"REJECTED"
+}
+###  APPROVING BOOK REQUEST
+PUT {{bookrequest-url}}/1/status
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "approveStatus":"APPROVED"
+}
+###
+PUT {{bookrequest-url}}/2/status
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "approveStatus":"APPROVED"
+}

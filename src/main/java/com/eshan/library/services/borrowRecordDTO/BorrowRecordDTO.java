@@ -1,7 +1,7 @@
 package com.eshan.library.services.borrowRecordDTO;
 
 public record BorrowRecordDTO(
-        Integer bookId,
+        String isbn,
         Integer studentId,
         Integer bookRequestId) {
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.eshan.library.models.ApproveStatus;
 import com.eshan.library.models.Book;
 import com.eshan.library.models.BookRequest;
 import com.eshan.library.models.BorrowRecord;
@@ -30,12 +31,20 @@ public class BorrowRecordService {
 
     public BorrowRecord save(BorrowRecordDTO dto) {
         var borrowRecord = toBorrowRecord(dto);
-        return borrowRecordRepository.save(borrowRecord);
+        var bookRequest = bookRequestRepository.findById(dto.bookRequestId());
+        if (bookRequest.isPresent() && bookRequest.get().getApproveStatus() == ApproveStatus.APPROVED) {
+            return borrowRecordRepository.save(borrowRecord);
+        } else {
+            throw new RuntimeException("Operation was not successful: Book-request was not approved!");
+
+        }
+
     }
 
     private BorrowRecord toBorrowRecord(BorrowRecordDTO dto) {
         var borrowRecord = new BorrowRecord();
-        Book b = bookRepository.findById(dto.bookId()).orElse(null);
+        Book b = bookRepository.findByIsbn(dto.isbn()).orElse(null);
+
         if (b != null) {
             borrowRecord.setBook(b);
         } else {
@@ -82,7 +91,10 @@ public class BorrowRecordService {
         BorrowRecord borrowRecord = borrowRecordRepository.findById(id).orElse(null);
         if (borrowRecord != null) {
             borrowRecord.setIsLost(true);
+            borrowRecord.setReturnDate(LocalDateTime.now());
+            calculatefine(borrowRecord);
             borrowRecordRepository.save(borrowRecord);
+            borrowRecordRepository.flush();
         } else {
             throw new RuntimeException("Operation was not successful: BookRecord does not exist!");
         }
@@ -91,23 +103,38 @@ public class BorrowRecordService {
     public double updateFine(Integer id) {
         BorrowRecord borrowRecord = borrowRecordRepository.findById(id).orElse(null);
         if (borrowRecord != null) {
-            LocalDateTime dueDateTime = borrowRecord.getDueDate();
-            LocalDateTime returnedDateTime = borrowRecord.getReturnDate();
-
-            LocalDate dueDate = dueDateTime.toLocalDate();
-            LocalDate returnedDate = returnedDateTime.toLocalDate();
-
-            long daysBetween = returnedDate.toEpochDay() - dueDate.toEpochDay();
-            double fine = 0;
-            if (daysBetween > 0) {
-                fine = daysBetween * 10; 
-                borrowRecord.setFine(fine);
-            }
+            var fine = calculatefine(borrowRecord);
             borrowRecordRepository.save(borrowRecord);
+            borrowRecordRepository.flush();
             return fine;
 
         } else {
             throw new RuntimeException("Operation was not successful: BookRecord does not exist!");
         }
+    }
+
+    public double calculatefine(BorrowRecord borrowRecord) {
+        long daysBetween = this.daysBetween(borrowRecord);
+        double fine = (borrowRecord.getFine() != null) ? borrowRecord.getFine() : 0.0;
+        if (daysBetween > 0) {
+            fine = daysBetween * 10;
+            borrowRecord.setFine(fine);
+        }
+        if (borrowRecord.getIsLost()) {
+            fine += borrowRecord.getBook().getPrice();
+            borrowRecord.setFine(fine);
+        }
+        return fine;
+
+    }
+
+    public long daysBetween(BorrowRecord borrowRecord) {
+        LocalDateTime dueDateTime = borrowRecord.getDueDate();
+        LocalDateTime returnedDateTime = borrowRecord.getReturnDate();
+
+        LocalDate dueDate = dueDateTime.toLocalDate();
+        LocalDate returnedDate = returnedDateTime.toLocalDate();
+        return returnedDate.toEpochDay() - dueDate.toEpochDay();
+
     }
 }

@@ -35,7 +35,8 @@ public class BorrowRecordController {
             return new ResponseEntity<>(null, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            // return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -53,23 +54,25 @@ public class BorrowRecordController {
 
     @PutMapping("{Id}/return")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BorrowRecord> bookReturn(@PathVariable("Id") Integer id) {
+    public ResponseEntity<String> bookReturn(@PathVariable("Id") Integer id) {
         try {
             borrowRecordService.returnBook(id);
             return new ResponseEntity<>(null, HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
+    // TODO: add fines for loosing book
     @PutMapping("{Id}/booklost")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BorrowRecord> lost(
+    public ResponseEntity<Double> lost(
             @PathVariable("Id") Integer id) {
         try {
             borrowRecordService.bookLost(id);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            var fine =borrowRecordService.updateFine(id);
+            return new ResponseEntity<>(fine, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

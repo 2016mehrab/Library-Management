@@ -35,7 +35,7 @@ public class BorrowRecord {
         private LocalDateTime returnDate;
 
         @ManyToOne
-        @JoinColumn(name = "book_id")
+        @JoinColumn(name = "isbn", referencedColumnName = "isbn")
         @JsonBackReference("book-borrowrecord")
         private Book book;
 

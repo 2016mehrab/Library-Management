@@ -7,7 +7,7 @@
 
 @auth-url=http://127.0.0.1:8080/student-auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6IlNfbm9vciIsImlhdCI6MTczODQwMzUwOSwiZXhwIjoxNzM4NDg5OTA5fQ.Vef5K7UuTo2EQ0OTl43_hiBIcl-PFlIhWyGlIVFj2JU
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6IlNfbm9vciIsImlhdCI6MTczODQyNjQyOCwiZXhwIjoxNzM4NTEyODI4fQ.eo1gXOuvm6_fm0b7TEjZeYAPOjwakw9Avn4G4L3GCsw
 ###
 POST {{auth-url}}/register
 Content-Type: application/json
@@ -66,4 +66,89 @@ Content-Type: application/json
 }
 ###
 DELETE {{student-url}}/20101320
+### REQUESTING BOOKS
+POST {{bookrequest-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "9876543210",
+    "librarianId":101,
+    "studentId":20101494
+
+}
 ###
+POST {{bookrequest-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn":"6677889900",
+    "librarianId":101,
+    "studentId":20101494
+
+}
+### 
+GET {{bookrequest-url}}
+Authorization: Bearer {{auth-token}}
+### 
+GET {{bookrequest-url}}/2
+Authorization: Bearer {{auth-token}}
+
+### BORROW-RECORDS 
+POST {{borrowrecord-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn": "9876543210",
+    "studentId":20101494,
+    "bookRequestId":1
+
+}
+### 
+POST {{borrowrecord-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "isbn":"6677889900",
+    "studentId":20101494,
+    "bookRequestId":2
+
+}
+
+###
+GET {{borrowrecord-url}}
+Authorization: Bearer {{auth-token}}
+### 
+GET {{borrowrecord-url}}/1
+Authorization: Bearer {{auth-token}}
+
+### RETURNING BOOKS
+PUT {{borrowrecord-url}}/252/return
+Authorization: Bearer {{auth-token}}
+###
+PUT {{borrowrecord-url}}/253/return
+Authorization: Bearer {{auth-token}}
+
+### CHECKING DELAY FINES
+PUT {{borrowrecord-url}}/252/fine
+Authorization: Bearer {{auth-token}}
+### 
+PUT {{borrowrecord-url}}/253/fine
+Authorization: Bearer {{auth-token}}
+
+### CHECKING FINES WITH BOOKLOST
+PUT {{borrowrecord-url}}/252/booklost
+Authorization: Bearer {{auth-token}}
+### 
+PUT {{borrowrecord-url}}/252/fine
+Authorization: Bearer {{auth-token}}
+### 
+PUT {{borrowrecord-url}}/253/booklost
+Authorization: Bearer {{auth-token}}
+### 
+PUT {{borrowrecord-url}}/253/fine
+Authorization: Bearer {{auth-token}}
+### 
