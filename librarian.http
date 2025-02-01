@@ -1,7 +1,8 @@
 @auth-url=http://127.0.0.1:8080/librarian-auth
 @librarian-url=http://127.0.0.1:8080/librarians
 @book-url=http://localhost:8080/books 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9lbWlseSIsImlhdCI6MTcxMzc5MDUyOCwiZXhwIjoxNzEzNzkxOTY4fQ.h9yuR5lC7jiDDJlpd1FfMhR2Gji1wNq-WQcwKDRRxCY
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3Mzg0MDM0MDEsImV4cCI6MTczODQ4OTgwMX0.euXf9ZpIkU9WAOpJOWWyNn7T64hh_s8tT2R2novm9dc
+@student-auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6IlNfbm9vciIsImlhdCI6MTczODQwMzUwOSwiZXhwIjoxNzM4NDg5OTA5fQ.Vef5K7UuTo2EQ0OTl43_hiBIcl-PFlIhWyGlIVFj2JU
 
 ###
 ###
@@ -9,8 +10,8 @@ POST {{auth-url}}/register
 Content-Type: application/json
 
 {
-    "username": "emily",
-    "password": "emlem",
+    "username": "rahman",
+    "password": "rahman",
     "librarianId":101
 }
 ###
@@ -112,3 +113,6 @@ Content-Type: application/json
     "categories": ["Fantasy", "Action"],
     "authors": ["Monsur", "Mirsil"]
 }
+###
+GET {{book-url}}
+Authorization: Bearer {{student-auth-token}}

@@ -10,7 +10,8 @@
 @auth-url=http://127.0.0.1:8080/auth
 @sauth-url=http://127.0.0.1:8080/student-auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTcxMzg1NzE5NywiZXhwIjoxNzEzODU4NjM3fQ.DgsCkTPoeEQSQ68zlsXNxHbfIFkoXUwyS4ZBRJsRaVQ
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTczODQwMjM3MywiZXhwIjoxNzM4NDg4NzczfQ.65dzEvw97gt6pdfeS2mZia8-JlCqpI3jkLzJQxRtdwE
+
 
 ###
 POST {{auth-url}}/register
@@ -58,12 +59,12 @@ Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
-    "name": "Ash",
-    "email": "ashley@gmail.com",
+    "name": "Noor Mohsin",
+    "email": "noor.mohsin@gmail.com",
     "admin":{
         "id":1
     },
-    "id":20101498
+    "id":20101494
 
 }
 ###
@@ -72,12 +73,12 @@ Content-Type: application/json
 Authorization: Bearer {{auth-token}}
 
 {
-    "name": "britt",
-    "email": "britany@gmail.com",
+    "name": "Rafique Ahmed",
+    "email": "rafique.ahmed@gmail.com",
     "admin":{
         "id":1
     },
-    "id":20101320
+    "id":20101495
 }
 ###
 GET {{studentinfo-url}}
@@ -111,8 +112,8 @@ Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
-    "name": "Emily",
-    "email": "em@gmail.com",
+    "name": "Abdur Rahman",
+    "email": "abdur.rahman@gmail.com",
     "admin":{
         "id":1
     },
@@ -125,8 +126,8 @@ Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
-    "name": "Brad",
-    "email": "br@gmail.com",
+    "name": "Rafid Rahman",
+    "email": "rrh@gmail.com",
     "admin":{
         "id":1
     },
