@@ -31,6 +31,10 @@ public class BorrowRecordService {
     public BorrowRecord save(BorrowRecordDTO dto) {
         var borrowRecord = toBorrowRecord(dto);
         var bookRequest = bookRequestRepository.findById(dto.bookRequestId());
+        // book quantity reduce
+        var currQuantity= borrowRecord.getBook().getQuantity();
+        borrowRecord.getBook().setQuantity(currQuantity-1);
+
         if (bookRequest.isPresent() && bookRequest.get().getApproveStatus() == ApproveStatus.APPROVED) {
             return borrowRecordRepository.save(borrowRecord);
         } else {
@@ -79,6 +83,10 @@ public class BorrowRecordService {
     public void returnBook(Integer id) {
         BorrowRecord borrowRecord = borrowRecordRepository.findById(id).orElse(null);
         if (borrowRecord != null) {
+        // book quantity increase
+            var currQuantity= borrowRecord.getBook().getQuantity();
+            borrowRecord.getBook().setQuantity(currQuantity);
+        // book returned now
             borrowRecord.setReturnDate(LocalDateTime.now());
             borrowRecordRepository.save(borrowRecord);
         } else {
@@ -114,7 +122,7 @@ public class BorrowRecordService {
 
     public double calculatefine(BorrowRecord borrowRecord) {
         long daysBetween = this.daysBetween(borrowRecord);
-        double fine = (borrowRecord.getFine() != null) ? borrowRecord.getFine() : 0.0;
+        double fine = 0.0;
         if (daysBetween > 0) {
             fine = daysBetween * 10;
             borrowRecord.setFine(fine);
