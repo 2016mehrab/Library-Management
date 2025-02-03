@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.eshan.library.models.ApproveStatus;
 import com.eshan.library.models.Book;
 import com.eshan.library.models.BookRequest;
 import com.eshan.library.models.Librarian;
@@ -139,9 +140,22 @@ public class BookRequestService {
 
     public void updateStatus(StatusUpdateDTO dto, Integer id) {
         BookRequest bookRequest = bookRequestRepository.findById(id).orElse(null);
+        System.out.println("book request-> "+ bookRequest);
+        System.out.println("Request id-> "+ id);
         if (bookRequest != null) {
-            bookRequest.setApproveStatus(dto.approveStatus());
-            bookRequestRepository.save(bookRequest);
+            if(dto.approveStatus()==ApproveStatus.APPROVED && bookRequest.getBook().getQuantity()>0 ){
+                System.out.println("approving dto status to -> "+ dto.approveStatus());
+                bookRequest.setApproveStatus(dto.approveStatus());
+            }
+            else if(dto.approveStatus()!=ApproveStatus.APPROVED){
+                System.out.println("rejecting dto status to -> "+ dto.approveStatus());
+                bookRequest.setApproveStatus(dto.approveStatus());
+                bookRequestRepository.save(bookRequest);
+            }
+            else{
+                throw new RuntimeException("Operation was not successful: Book not available");
+            }
+
         } else {
             throw new RuntimeException("Operation was not successful: BookRequest does not exist!");
         }
