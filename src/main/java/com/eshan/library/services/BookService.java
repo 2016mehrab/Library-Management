@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.eshan.library.models.Author;
@@ -89,10 +93,11 @@ public class BookService {
         }
     }
 
-    public List<BookResponseDTO> findAll() {
-        return bookRepository.findAll().stream()
-                .map(this::toBookResponseDTO)
-                .collect(Collectors.toList());
+
+    public List<BookResponseDTO> findAll(int pageNum,int pageSize,List<String> sortby, Direction dir) {
+        Sort sort =Sort.by(dir, sortby.toArray(new String [0])) ;
+        Pageable pg = PageRequest.of(pageNum, pageSize, sort);
+        return bookRepository.findAll(pg).map(this::toBookResponseDTO).getContent();
     }
 
     // public Book findByIsbn(String isbn) {

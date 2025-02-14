@@ -2,8 +2,8 @@
 @librarian-url=http://127.0.0.1:8080/librarians
 @book-url=http://localhost:8080/books 
 @bookrequest-url=http://127.0.0.1:8080/bookrequests
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3Mzg0MjY0MTMsImV4cCI6MTczODUxMjgxM30.1d3nALtEp9wqFYMo-VFznur4OhzCYax3_bgHvvbK17s
-@student-auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6IlNfbm9vciIsImlhdCI6MTczODQwMzUwOSwiZXhwIjoxNzM4NDg5OTA5fQ.Vef5K7UuTo2EQ0OTl43_hiBIcl-PFlIhWyGlIVFj2JU
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3Mzk1Mzk2MjMsImV4cCI6MTczOTYyNjAyM30.frJK25nq5HvmwbAfUL_vwSvlRQpLN2gNy-YVZ0sU6gM
+@student-auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3Mzk1Mzk0NTEsImV4cCI6MTczOTYyNTg1MX0.Pqki0n2-Uzvzw1Noop9tEykMBkdiNEtCc8CZajxQK6Q
 
 ###
 ###
@@ -21,8 +21,8 @@ POST {{auth-url}}/authenticate
 Content-Type: application/json
 
 {
-    "username": "emily",
-    "password": "emlem"
+    "username": "rahman",
+    "password": "rahman"
 }
 ######
 GET {{librarian-url}}
@@ -115,8 +115,8 @@ Content-Type: application/json
     "authors": ["Monsur", "Mirsil"]
 }
 ###
-GET {{book-url}}
-Authorization: Bearer {{student-auth-token}}
+GET {{book-url}}?pageSize=2&pageNum=1&sortBy=quantity&dir=desc
+Authorization: Bearer {{auth-token}}
 
 ### REVIEWING BOOKSREQUESTS
 GET {{bookrequest-url}}
@@ -142,6 +142,14 @@ Content-Type: application/json
 }
 ###
 PUT {{bookrequest-url}}/2/status
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "approveStatus":"APPROVED"
+}
+###
+PUT {{bookrequest-url}}/52/status
 Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
