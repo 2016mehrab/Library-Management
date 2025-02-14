@@ -19,19 +19,17 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 
 public class Author {
-    @Id
-    @GeneratedValue
-    @Column(
-            name = "author_id",
-            nullable = false,
-            unique = true
-    )
-    private Integer id;
-    @Column(
-            name = "author_name",
-            nullable = false
-    )
-    private String name;
-    @ManyToMany(mappedBy = "authors")
-    private List<Book> books;
+        @Id
+        @GeneratedValue
+        @Column(name = "author_id", nullable = false, unique = true)
+        private Integer id;
+        @Column(name = "author_name", nullable = false)
+        private String name;
+        @ManyToMany(mappedBy = "authors")
+        private List<Book> books;
+
+        @Override
+        public String toString() {
+                return "Author [id=" + id + ", name=" + name + "]";
+        }
 }

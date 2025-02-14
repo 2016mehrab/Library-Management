@@ -2,6 +2,7 @@ package com.eshan.library.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -63,6 +64,7 @@ public class BookRequestService {
 
                 throw new RuntimeException("Operation was not successful: Student not found!");
             }
+
             Optional<Book> OB = bookRepository.findByIsbn(dto.isbn());
             if (!OB.isPresent()) {
 
@@ -140,19 +142,18 @@ public class BookRequestService {
 
     public void updateStatus(StatusUpdateDTO dto, Integer id) {
         BookRequest bookRequest = bookRequestRepository.findById(id).orElse(null);
-        System.out.println("book request-> "+ bookRequest);
-        System.out.println("Request id-> "+ id);
         if (bookRequest != null) {
-            if(dto.approveStatus()==ApproveStatus.APPROVED && bookRequest.getBook().getQuantity()>0 ){
-                System.out.println("approving dto status to -> "+ dto.approveStatus());
+            if (dto.approveStatus() == ApproveStatus.APPROVED && bookRequest.getBook().getQuantity() > 0) {
+                // set status
                 bookRequest.setApproveStatus(dto.approveStatus());
-            }
-            else if(dto.approveStatus()!=ApproveStatus.APPROVED){
-                System.out.println("rejecting dto status to -> "+ dto.approveStatus());
-                bookRequest.setApproveStatus(dto.approveStatus());
+                // save to db 
                 bookRequestRepository.save(bookRequest);
-            }
-            else{
+            } else if (dto.approveStatus() != ApproveStatus.APPROVED) {
+                // set status
+                bookRequest.setApproveStatus(dto.approveStatus());
+                // save to db 
+                bookRequestRepository.save(bookRequest);
+            } else {
                 throw new RuntimeException("Operation was not successful: Book not available");
             }
 

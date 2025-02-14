@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.ssl.SslBundleProperties.Key;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +31,9 @@ public class JwtService {
     }
 
     public String extractRole(String jwtToken) {
-        return extractClaim(jwtToken, claims -> claims.get("role", String.class));
+        var role =extractClaim(jwtToken, claims -> claims.get("role", String.class));
+        LoggerFactory.getLogger(getClass()).info("ROLE FROM TOKEN "+role);
+        return role;
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
@@ -52,18 +55,18 @@ public class JwtService {
     }
 
     public String generateToken(
-    Map<String, Object> extraClaims,
-    UserDetails userdetails) {
-    extraClaims.put("role",
-    userdetails.getAuthorities().stream().findFirst().map(GrantedAuthority::getAuthority)
-    .orElse(""));
-    return Jwts.builder()
-    .setClaims(extraClaims)
-    .setSubject(userdetails.getUsername())
-    .setIssuedAt(new Date(System.currentTimeMillis()))
-    .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-    .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-    .compact();
+            Map<String, Object> extraClaims,
+            UserDetails userdetails) {
+        extraClaims.put("role",
+                userdetails.getAuthorities().stream().findFirst().map(GrantedAuthority::getAuthority)
+                        .orElse(""));
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userdetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
 
     }
 
@@ -78,7 +81,7 @@ public class JwtService {
     }
 
     public boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
+        return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {

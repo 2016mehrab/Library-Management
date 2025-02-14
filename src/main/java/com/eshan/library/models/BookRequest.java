@@ -50,4 +50,11 @@ public class BookRequest {
         @OneToOne(mappedBy = "bookRequest", cascade = CascadeType.REMOVE)
         @JsonBackReference("bookrequest-borrowrecord")
         private BorrowRecord borrowRecord;
+
+        @Override
+        public String toString() {
+                return "BookRequest [requestDate=" + requestDate + ", librarian=" + librarian + ", student=" + student
+                                + ", book=" + book.getTitle() + ", approveStatus=" + approveStatus + "]";
+        }
+
 }

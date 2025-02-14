@@ -34,7 +34,7 @@ public class Book {
         @JoinTable(name = "book_author", joinColumns = {
                         @JoinColumn(name = "book_id")
         }, inverseJoinColumns = { @JoinColumn(name = "author_id") })
-        
+
         private List<Author> authors;
         // owner of the relationship
         @ManyToMany
@@ -49,5 +49,17 @@ public class Book {
 
         @OneToMany(mappedBy = "book")
         private List<BookRequest> bookRequests;
+
+        @Override
+        public String toString() {
+                return "Book{" +
+                                "id=" + id +
+                                ", isbn='" + isbn + '\'' +
+                                ", title='" + title + '\'' +
+                                ", quantity=" + quantity +
+                                ", price=" + price +
+                                ", CoverLink='" + CoverLink + '\'' +
+                                '}';
+        }
 
 }
