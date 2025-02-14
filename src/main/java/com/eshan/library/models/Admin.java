@@ -58,4 +58,9 @@ public class Admin implements UserDetails {
                 return true;
         }
 
+        @Override
+        public String toString() {
+                return "Admin{id=" + id + ", username='" + username + "', role=" + role + "}";
+        }
+
 }

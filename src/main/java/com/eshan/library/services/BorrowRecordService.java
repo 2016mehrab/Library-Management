@@ -3,6 +3,7 @@ package com.eshan.library.services;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
@@ -101,6 +102,7 @@ public class BorrowRecordService {
             borrowRecord.setReturnDate(LocalDateTime.now());
             calculatefine(borrowRecord);
             borrowRecordRepository.save(borrowRecord);
+            Logger.getLogger("BookLost").info(""+borrowRecord);
             borrowRecordRepository.flush();
         } else {
             throw new RuntimeException("Operation was not successful: BookRecord does not exist!");
@@ -122,13 +124,21 @@ public class BorrowRecordService {
 
     public double calculatefine(BorrowRecord borrowRecord) {
         long daysBetween = this.daysBetween(borrowRecord);
-        double fine = 0.0;
+        Logger.getLogger("BookLost").info("daysbetween-> "+daysBetween);
+
+        // initial fine
+        // double fine = (borrowRecord.getFine() != null) ? borrowRecord.getFine() : 0.0;
+        double fine =  0.0;
+        Logger.getLogger("BookLost").info("initial fine-> "+fine);
+
         if (daysBetween > 0) {
-            fine = daysBetween * 10;
+            fine += daysBetween * 10;
             borrowRecord.setFine(fine);
+            Logger.getLogger("BookLost").info("fine for delay-> "+fine);
         }
         if (borrowRecord.getIsLost()) {
             fine += borrowRecord.getBook().getPrice();
+            Logger.getLogger("BookLost").info("fine for losing the book-> "+fine);
             borrowRecord.setFine(fine);
         }
         return fine;

@@ -72,4 +72,9 @@ public class Librarian implements UserDetails {
         public boolean isEnabled() {
                 return true;
         }
+
+        @Override
+        public String toString() {
+                return "Librarian{id=" + id + ", username='" + username + "', role=" + role + "}";
+        }
 }

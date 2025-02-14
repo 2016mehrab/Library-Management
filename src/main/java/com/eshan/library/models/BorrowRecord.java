@@ -57,4 +57,11 @@ public class BorrowRecord {
                 this.fine = 0.0;
         }
 
+        @Override
+        public String toString() {
+                return "BorrowRecord [fine=" + fine + ", isLost=" + isLost + ", borrowDate=" + borrowDate + ", dueDate="
+                                + dueDate + ", returnDate=" + returnDate + ", book=" + book.getTitle() + ", student=" + student
+                                + "]";
+        }
+
 }

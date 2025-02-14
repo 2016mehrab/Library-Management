@@ -36,56 +36,48 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String username;
         final String role;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            LoggerFactory.getLogger(JwtAuthenticationFilter.class).info("Missing or invalid Authorization header");
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(7);
         username = jwtService.extractUsername(jwt);
         role = jwtService.extractRole(jwt);
-        if (role.equals("ADMIN")  && username != null
+        if (role == null) {
+            LoggerFactory.getLogger(JwtAuthenticationFilter.class).info("JWT role is null for user: " + username);
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (role.equals("ADMIN") && username != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.adminDetailsService.loadUserByUsername(username);
+            LoggerFactory.getLogger(JwtAuthenticationFilter.class).info("Validity of JWT for user: " + username+" is "+jwtService.isTokenValid(jwt, userDetails));
+
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource()
-                        .buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                setContext(userDetails, request);
             }
-        }
-        else if (role.equals("STUDENT")  && username != null
+        } else if (role.equals("STUDENT") && username != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.studentDetailsService.loadUserByUsername(username);
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource()
-                        .buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                setContext(userDetails, request);
             }
-        }
-        else if (role.equals("LIBRARIAN")  && username != null
+        } else if (role.equals("LIBRARIAN") && username != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.librarianDetailsService.loadUserByUsername(username);
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource()
-                        .buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                setContext(userDetails, request);
             }
         }
-        // if (request.getRequestURI().startsWith("/admins") && username != null
-        //         && SecurityContextHolder.getContext().getAuthentication() == null) {
-        //     UserDetails userDetails = this.adminDetailsService.loadUserByUsername(username);
-        //     if (jwtService.isTokenValid(jwt, userDetails)) {
-        //         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-        //                 null, userDetails.getAuthorities());
-        //         authToken.setDetails(new WebAuthenticationDetailsSource()
-        //                 .buildDetails(request));
-        //         SecurityContextHolder.getContext().setAuthentication(authToken);
-        //     }
-        // }
+
         filterChain.doFilter(request, response);
     }
+
+    void setContext(UserDetails userDetails, HttpServletRequest request) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+    }
+
 }

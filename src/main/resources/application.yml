@@ -2,11 +2,27 @@ spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/library_management
     username: root
-    password: root
+    password: rootpassword
     driver-class-name: com.mysql.jdbc.Driver
+  mvc:
+    enableLoggingRequestDetails: false
   jpa:
+    open-in-view: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     database: mysql
-    show-sql: true
-
+    show-sql: false
+server:
+  port: 8080
+  error:
+    include-stacktrace: never
+logging:
+  pattern:
+    console: "%d{HH:mm:ss dd-MM-yyyy} - %msg%n"
+    file: "%d{HH:mm:ss dd-MM-yyyy} - %msg%n"
+  file:
+    name: app.log
+  level: 
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    com.eshan.library: DEBUG

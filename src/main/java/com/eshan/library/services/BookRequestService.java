@@ -2,10 +2,12 @@ package com.eshan.library.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.eshan.library.models.ApproveStatus;
 import com.eshan.library.models.Book;
 import com.eshan.library.models.BookRequest;
 import com.eshan.library.models.Librarian;
@@ -62,6 +64,7 @@ public class BookRequestService {
 
                 throw new RuntimeException("Operation was not successful: Student not found!");
             }
+
             Optional<Book> OB = bookRepository.findByIsbn(dto.isbn());
             if (!OB.isPresent()) {
 
@@ -140,8 +143,20 @@ public class BookRequestService {
     public void updateStatus(StatusUpdateDTO dto, Integer id) {
         BookRequest bookRequest = bookRequestRepository.findById(id).orElse(null);
         if (bookRequest != null) {
-            bookRequest.setApproveStatus(dto.approveStatus());
-            bookRequestRepository.save(bookRequest);
+            if (dto.approveStatus() == ApproveStatus.APPROVED && bookRequest.getBook().getQuantity() > 0) {
+                // set status
+                bookRequest.setApproveStatus(dto.approveStatus());
+                // save to db 
+                bookRequestRepository.save(bookRequest);
+            } else if (dto.approveStatus() != ApproveStatus.APPROVED) {
+                // set status
+                bookRequest.setApproveStatus(dto.approveStatus());
+                // save to db 
+                bookRequestRepository.save(bookRequest);
+            } else {
+                throw new RuntimeException("Operation was not successful: Book not available");
+            }
+
         } else {
             throw new RuntimeException("Operation was not successful: BookRequest does not exist!");
         }
