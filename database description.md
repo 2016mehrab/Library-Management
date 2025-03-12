@@ -50,4 +50,10 @@ Here’s a description of the database schema based on the relationships shown i
   - Each table has clearly defined primary keys (e.g., `AdminID`, `StudentID`, `BookID`, etc.).
   - Foreign keys establish the relationships between tables.
 
-If you need further clarification or additional examples, feel free to ask!
+### Misc:
+* Books
+  - sort by category, author, price, quantity
+* Bookrequest
+  - sorty by most requested books title, approve status, request date, 
+* borrow record
+  - sorty by most borrowed books title, return date, due date, student,

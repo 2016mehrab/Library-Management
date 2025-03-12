@@ -2,8 +2,8 @@
 @librarian-url=http://127.0.0.1:8080/librarians
 @book-url=http://localhost:8080/books 
 @bookrequest-url=http://127.0.0.1:8080/bookrequests
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3Mzk1Mzk2MjMsImV4cCI6MTczOTYyNjAyM30.frJK25nq5HvmwbAfUL_vwSvlRQpLN2gNy-YVZ0sU6gM
-@student-auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3Mzk1Mzk0NTEsImV4cCI6MTczOTYyNTg1MX0.Pqki0n2-Uzvzw1Noop9tEykMBkdiNEtCc8CZajxQK6Q
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3NDE0MzEyNjMsImV4cCI6MTc0MTUxNzY2M30.TnW_YEFHtKQhMMGbM0NWeY4M3LLQH4120AlC-974vjY
+@student-auth-token=
 
 ###
 ###
@@ -116,6 +116,9 @@ Content-Type: application/json
 }
 ###
 GET {{book-url}}?pageSize=2&pageNum=1&sortBy=quantity&dir=desc
+Authorization: Bearer {{auth-token}}
+###
+GET {{book-url}}/978-3-21-098765-2
 Authorization: Bearer {{auth-token}}
 
 ### REVIEWING BOOKSREQUESTS

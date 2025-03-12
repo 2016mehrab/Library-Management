@@ -18,6 +18,7 @@ import com.eshan.library.repositories.BookRepository;
 import com.eshan.library.repositories.CategoryRepository;
 import com.eshan.library.services.bookDTO.BookDTO;
 import com.eshan.library.services.bookDTO.BookResponseDTO;
+import com.eshan.library.services.bookDTO.BookUpdateDTO;
 import com.eshan.library.services.bookDTO.CoverLinkUpdateDTO;
 import com.eshan.library.services.bookDTO.QuantityUpdateDTO;
 
@@ -93,29 +94,34 @@ public class BookService {
         }
     }
 
-
-    public List<BookResponseDTO> findAll(int pageNum,int pageSize,List<String> sortby, Direction dir) {
-        Sort sort =Sort.by(dir, sortby.toArray(new String [0])) ;
+    public List<BookResponseDTO> findAll(int pageNum, int pageSize, List<String> sortby, Direction dir) {
+        Sort sort = Sort.by(dir, sortby.toArray(new String[0]));
         Pageable pg = PageRequest.of(pageNum, pageSize, sort);
         return bookRepository.findAll(pg).map(this::toBookResponseDTO).getContent();
     }
 
     // public Book findByIsbn(String isbn) {
-    //     Optional<Book> optionalBook = bookRepository.findByIsbn(isbn);
-    //     if (optionalBook.isPresent()) {
-    //         return optionalBook.get();
-    //     } else {
-    //         throw new RuntimeException("Operation was not successful: Book does not exist!");
-    //     }
+    // Optional<Book> optionalBook = bookRepository.findByIsbn(isbn);
+    // if (optionalBook.isPresent()) {
+    // return optionalBook.get();
+    // } else {
+    // throw new RuntimeException("Operation was not successful: Book does not
+    // exist!");
+    // }
 
     // }
 
     // public List<Book> findAll() {
-    //     return bookRepository.findAll();
+    // return bookRepository.findAll();
     // }
 
-    public void delete(String isbn) {
+    public boolean delete(String isbn) {
+        if (!bookRepository.findByIsbn(isbn).isPresent()) {
+            return false; // Book not found
+        }
+
         bookRepository.deleteByIsbn(isbn);
+        return true;
     }
 
     public void updateQuantity(QuantityUpdateDTO quantityDTO, String isbn) {
@@ -137,6 +143,50 @@ public class BookService {
         } else {
             throw new RuntimeException("Operation was not successful: Book does not exist!");
         }
+    }
+
+    public void updateBook(String isbn, BookUpdateDTO bookUpdateDTO) {
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        // Update fields if they are not null in the DTO
+        if (bookUpdateDTO.title() != null) {
+            book.setTitle(bookUpdateDTO.title());
+        }
+        if (bookUpdateDTO.quantity() != null) {
+            book.setQuantity(bookUpdateDTO.quantity());
+        }
+        if (bookUpdateDTO.price() != null) {
+            book.setPrice(bookUpdateDTO.price());
+        }
+        if (bookUpdateDTO.coverLink() != null) {
+            book.setCoverLink(bookUpdateDTO.coverLink());
+        }
+        if (bookUpdateDTO.categories() != null) {
+            List<Category> categories = bookUpdateDTO.categories().stream()
+                    .map(name -> categoryRepository.findByName(name)
+                            .orElseGet(() -> {
+                                Category newCategory = new Category();
+                                newCategory.setName(name);
+                                return categoryRepository.save(newCategory);
+                            }))
+                    .collect(Collectors.toList());
+
+            book.setCategories(categories);
+        }
+        if (bookUpdateDTO.authors() != null) {
+            List<Author> authors = bookUpdateDTO.authors().stream()
+                    .map(name -> authorRepository.findByName(name)
+                            .orElseGet(() -> {
+                                Author newAuthor = new Author();
+                                newAuthor.setName(name);
+                                return authorRepository.save(newAuthor);
+                            }))
+                    .collect(Collectors.toList());
+            book.setAuthors(authors);
+        }
+
+        bookRepository.save(book);
     }
 
 }

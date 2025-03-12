@@ -21,6 +21,7 @@ import com.eshan.library.models.Book;
 import com.eshan.library.services.BookService;
 import com.eshan.library.services.bookDTO.BookDTO;
 import com.eshan.library.services.bookDTO.BookResponseDTO;
+import com.eshan.library.services.bookDTO.BookUpdateDTO;
 import com.eshan.library.services.bookDTO.CoverLinkUpdateDTO;
 import com.eshan.library.services.bookDTO.QuantityUpdateDTO;
 
@@ -63,21 +64,33 @@ public class BookController {
 
     @GetMapping
     public List<BookResponseDTO> findAll(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "title") List<String> sortBy,
+            @RequestParam(defaultValue = "15") int pageSize, @RequestParam(defaultValue = "title") List<String> sortBy,
             @RequestParam(defaultValue = "asc") String order) {
         Direction sortOrder = Direction.fromString(order);
         return bookService.findAll(page, pageSize, sortBy, sortOrder);
     }
 
-    @DeleteMapping("{Id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteLibrarian(@PathVariable("Id") String isbn) {
-        bookService.delete(isbn);
+    // @DeleteMapping("{Id}")
+    // @ResponseStatus(HttpStatus.OK)
+    // public void deleteLibrarian(@PathVariable("Id") String isbn) {
+    // bookService.delete(isbn);
+    // }
+
+    @DeleteMapping("/{Id}")
+    public ResponseEntity<String> deleteBook(@PathVariable("Id") String isbn) {
+        boolean deleted = bookService.delete(isbn);
+
+        if (!deleted) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Book with ISBN " + isbn + " not found.");
+        }
+
+        return ResponseEntity.ok("Book with ISBN " + isbn + " deleted successfully.");
     }
 
     @PutMapping("{Id}/quantity")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Book> updateQuatity(@RequestBody QuantityUpdateDTO quantityDto,
+    public ResponseEntity<Book> updateQuantity(@RequestBody QuantityUpdateDTO quantityDto,
             @PathVariable("Id") String isbn) {
         try {
             bookService.updateQuantity(quantityDto, isbn);
@@ -96,6 +109,17 @@ public class BookController {
             bookService.updateCoverLink(linkUpdateDTO, isbn);
             return new ResponseEntity<>(null, HttpStatus.OK);
 
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{isbn}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody BookUpdateDTO bookUpdateDTO) {
+        try {
+            bookService.updateBook(isbn, bookUpdateDTO);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
