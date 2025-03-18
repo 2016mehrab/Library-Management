@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -46,17 +48,31 @@ public class SecurityConfiguration {
         }
 
         @Bean
+        CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration config = new CorsConfiguration();
+                // React frontend
+                config.setAllowedOrigins(
+                                List.of("http://localhost:5173"
+                                // "http://localhost:5173/books",
+                                // "http://localhost:5173/dashboard",
+                                // "http://localhost:5173/borrow-records",
+                                // "http://localhost:5173/requested-books",
+                                // "http://localhost:5173/review-requests"
+                                ));
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                config.setAllowedHeaders(
+                                List.of(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION));
+                config.setAllowCredentials(true);
+                UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
+                src.registerCorsConfiguration("/**", config);
+                return src;
+
+        }
+
+        @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
                 httpSecurity
-                                .cors(cors -> cors.configurationSource(request -> {
-                                        CorsConfiguration config = new CorsConfiguration();
-                                        config.setAllowedOrigins(List.of("http://localhost:5173")); // React frontend
-                                        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                                        config.setAllowedHeaders(
-                                                        List.of(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION));
-                                        config.setAllowCredentials(true);
-                                        return config;
-                                }));
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
                 httpSecurity.csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(requests -> requests
                                                 .requestMatchers("/auth/**").permitAll()

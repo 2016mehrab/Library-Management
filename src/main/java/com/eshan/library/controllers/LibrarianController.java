@@ -46,7 +46,7 @@ public class LibrarianController {
     }
 
     @GetMapping
-    public List<LibrarianResponseDTO> findAllStudentInfo() {
+    public List<LibrarianResponseDTO> findAllLibrarians() {
         return librarianService.findAllLibrarian();
     }
 

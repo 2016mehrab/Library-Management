@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eshan.library.models.LibrarianInfo;
 import com.eshan.library.services.LibrarianInfoService;
 
-
 @RestController
 @RequestMapping("/librarianinfo")
 @CrossOrigin
@@ -46,7 +45,7 @@ public class LibrarianInfoController {
     }
 
     @GetMapping
-    public List<LibrarianInfo> findAllStudentInfo() {
+    public List<LibrarianInfo> findAllLibrarianInfo() {
         return librarianInfoService.findAllLibrarianInfo();
     }
 
