@@ -39,16 +39,17 @@ public class BookRequestController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping
-        public List<BookRequestResponseDTO> findAll() {
-            return bookRequestService.findAll();
+    public List<BookRequestResponseDTO> findAll() {
+        return bookRequestService.findAll();
     }
 
     @GetMapping("{Id}")
-    public ResponseEntity<BookRequestResponseDTO> findbyId(@PathVariable ("Id") Integer id) {
+    public ResponseEntity<BookRequestResponseDTO> findbyId(@PathVariable("Id") Integer id) {
 
         try {
-            
+
             return new ResponseEntity<>(bookRequestService.findById(id), HttpStatus.OK);
 
         } catch (Exception e) {
@@ -64,6 +65,26 @@ public class BookRequestController {
             bookRequestService.updateStatus(dto, id);
             return new ResponseEntity<>(null, HttpStatus.OK);
 
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/librarian/{librarianId}")
+    public ResponseEntity<List<BookRequestResponseDTO>> getRequestsByLibrarian(@PathVariable Integer librarianId) {
+        try {
+            List<BookRequestResponseDTO> requests = bookRequestService.getRequestsForLibrarian(librarianId);
+            return new ResponseEntity<>(requests, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<BookRequestResponseDTO>> getRequestsByStudent(@PathVariable Integer studentId) {
+        try {
+            List<BookRequestResponseDTO> requests = bookRequestService.getRequestsForStudent(studentId);
+            return new ResponseEntity<>(requests, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

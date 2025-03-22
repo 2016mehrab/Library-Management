@@ -23,7 +23,7 @@ public class LibrarianAuthService {
 
     public AuthenticationResponse register(LibrarianDTO request) {
         var librarian = librarianService.saveLibrarian(request);
-        var jwtToken = jwtService.generateToken(librarian);
+        var jwtToken = jwtService.generateTokenWithId(librarian, librarian.getLibrarianInfo().getId());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -35,13 +35,12 @@ public class LibrarianAuthService {
                         request.getPassword()));
         var librarian = librarianRepository.findByUsername(addLibrarianPrefix(request.getUsername()));
         if (librarian.isPresent()) {
-            var jwtToken = jwtService.generateToken(librarian.get());
+        var jwtToken = jwtService.generateTokenWithId(librarian.get(), librarian.get().getLibrarianInfo().getId());
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .build();
         }
         return null;
-
     }
 
     private String addLibrarianPrefix(String username) {

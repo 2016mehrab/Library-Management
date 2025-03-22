@@ -28,7 +28,8 @@ public class StudentAuthService {
 
     public AuthenticationResponse register(StudentDTO request) {
         var student = studentService.save(request);
-        var jwtToken = jwtService.generateToken(student);
+        var jwtToken = jwtService.generateTokenWithId(student, student.getStudentInfo().getId());
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -40,7 +41,8 @@ public class StudentAuthService {
                         request.getPassword()));
         var student = studentRepository.findByUsername(addStudentPrefix(request.getUsername()));
         if (student.isPresent()) {
-            var jwtToken = jwtService.generateToken(student.get());
+            var jwtToken = jwtService.generateTokenWithId(student.get(), student.get().getStudentInfo().getId());
+            // var jwtToken = jwtService.generateToken(student.get());
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .build();

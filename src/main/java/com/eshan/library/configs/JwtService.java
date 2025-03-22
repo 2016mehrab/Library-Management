@@ -31,8 +31,8 @@ public class JwtService {
     }
 
     public String extractRole(String jwtToken) {
-        var role =extractClaim(jwtToken, claims -> claims.get("role", String.class));
-        LoggerFactory.getLogger(getClass()).info("ROLE FROM TOKEN "+role);
+        var role = extractClaim(jwtToken, claims -> claims.get("role", String.class));
+        LoggerFactory.getLogger(getClass()).info("ROLE FROM TOKEN " + role);
         return role;
     }
 
@@ -73,6 +73,28 @@ public class JwtService {
     public String generateToken(
             UserDetails userdetails) {
         return generateToken(new HashMap<>(), userdetails);
+    }
+
+    public String generateTokenWithId(
+            UserDetails userdetails, Integer userid) {
+        return generateTokenWithId(new HashMap<>(), userdetails, userid);
+    }
+
+    public String generateTokenWithId(
+            Map<String, Object> extraClaims,
+            UserDetails userdetails, Integer userid) {
+        extraClaims.put("role",
+                userdetails.getAuthorities().stream().findFirst().map(GrantedAuthority::getAuthority)
+                        .orElse(""));
+        extraClaims.put("userId", userid);
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userdetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

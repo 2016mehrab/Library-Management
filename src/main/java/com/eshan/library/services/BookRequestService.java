@@ -127,6 +127,30 @@ public class BookRequestService {
 
     }
 
+    public List<BookRequestResponseDTO> getRequestsForLibrarian(Integer librarianId) {
+        Optional<Librarian> lb = librarianRepository.findByLibrarianInfo_Id(librarianId);
+        if (lb.isPresent()) {
+            return bookRequestRepository.findByLibrarian(lb.get()).stream().map(this::toBookRequestResponseDTO)
+                    .collect(Collectors.toList());
+
+        } else {
+            throw new RuntimeException("Operation was not successful: Librarian does not exist");
+        }
+
+    }
+
+    public List<BookRequestResponseDTO> getRequestsForStudent(Integer studentid) {
+        Optional<Student> st = studentRepository.findById(studentid);
+        if (st.isPresent()) {
+            return bookRequestRepository.findByStudent(st.get()).stream().map(this::toBookRequestResponseDTO)
+                    .collect(Collectors.toList());
+
+        } else {
+            throw new RuntimeException("Operation was not successful: student does not exist");
+        }
+
+    }
+
     public BookRequestResponseDTO findById(Integer id) {
         if (bookRequestRepository.findById(id).isPresent()) {
             return toBookRequestResponseDTO(bookRequestRepository.findById(id).get());
@@ -146,12 +170,12 @@ public class BookRequestService {
             if (dto.approveStatus() == ApproveStatus.APPROVED && bookRequest.getBook().getQuantity() > 0) {
                 // set status
                 bookRequest.setApproveStatus(dto.approveStatus());
-                // save to db 
+                // save to db
                 bookRequestRepository.save(bookRequest);
             } else if (dto.approveStatus() != ApproveStatus.APPROVED) {
                 // set status
                 bookRequest.setApproveStatus(dto.approveStatus());
-                // save to db 
+                // save to db
                 bookRequestRepository.save(bookRequest);
             } else {
                 throw new RuntimeException("Operation was not successful: Book not available");
