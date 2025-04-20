@@ -7,10 +7,12 @@
 
 @borrowrecord-url=http://127.0.0.1:8080/borrowrecords
 
+@book-url=http://localhost:8080/books 
+
 @auth-url=http://127.0.0.1:8080/auth
 @sauth-url=http://127.0.0.1:8080/student-auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTczODQwMjM3MywiZXhwIjoxNzM4NDg4NzczfQ.65dzEvw97gt6pdfeS2mZia8-JlCqpI3jkLzJQxRtdwE
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJBX21laHJhYiIsImlhdCI6MTc0NDEzMDE0MiwiZXhwIjoxNzQ0MjE2NTQyfQ.slFcVOza-q9wfFAFUdel8Lb4w7wWSqBUGe1A4uVdM4Y
 
 
 ###
@@ -54,6 +56,33 @@ Authorization: Bearer {{auth-token}}
 ###
 @studentinfo-url=http://127.0.0.1:8080/studentinfo
 ###
+POST {{librarianinfo-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "name": "Abdur Rahman",
+    "email": "abdur.rahman@gmail.com",
+    "admin":{
+        "id":1
+    },
+    "id":101
+
+}
+###
+POST {{librarianinfo-url}}
+Authorization: Bearer {{auth-token}}
+Content-Type: application/json
+
+{
+    "name": "Rafid Rahman",
+    "email": "rrh@gmail.com",
+    "admin":{
+        "id":1
+    },
+    "id":102
+}
+###
 POST {{studentinfo-url}}
 Authorization: Bearer {{auth-token}}
 Content-Type: application/json
@@ -81,6 +110,10 @@ Authorization: Bearer {{auth-token}}
     "id":20101495
 }
 ###
+GET {{student-url}}/20101494
+Authorization: Bearer {{auth-token}}
+###
+
 GET {{studentinfo-url}}
 Authorization: Bearer {{auth-token}}
 ###
@@ -107,32 +140,6 @@ Content-Type: application/json
 ###
 DELETE {{studentinfo-url}}/20101320
 ###
-POST {{librarianinfo-url}}
-Authorization: Bearer {{auth-token}}
-Content-Type: application/json
-
-{
-    "name": "Abdur Rahman",
-    "email": "abdur.rahman@gmail.com",
-    "admin":{
-        "id":1
-    },
-    "id":101
-
-}
-###
-POST {{librarianinfo-url}}
-Authorization: Bearer {{auth-token}}
-Content-Type: application/json
-
-{
-    "name": "Rafid Rahman",
-    "email": "rrh@gmail.com",
-    "admin":{
-        "id":1
-    },
-    "id":102
-}
 ###
 GET {{librarianinfo-url}}
 Authorization: Bearer {{auth-token}}
@@ -352,5 +359,8 @@ Content-Type: application/json
 
 ###
 GET {{borrowrecord-url}}
+Authorization: Bearer {{auth-token}}
+###
+GET {{book-url}}/1234567890
 Authorization: Bearer {{auth-token}}
 ###

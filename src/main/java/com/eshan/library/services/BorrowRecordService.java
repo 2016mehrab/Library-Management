@@ -2,22 +2,28 @@ package com.eshan.library.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.eshan.library.models.ApproveStatus;
 import com.eshan.library.models.Book;
 import com.eshan.library.models.BookRequest;
 import com.eshan.library.models.BorrowRecord;
+import com.eshan.library.models.Librarian;
 import com.eshan.library.models.Student;
 import com.eshan.library.models.StudentInfo;
 import com.eshan.library.repositories.BookRepository;
 import com.eshan.library.repositories.BookRequestRepository;
 import com.eshan.library.repositories.BorrowRecordRepository;
+import com.eshan.library.repositories.LibrarianRepository;
 import com.eshan.library.repositories.StudentInfoRepository;
+import com.eshan.library.repositories.StudentRepository;
 import com.eshan.library.services.borrowRecordDTO.BorrowRecordDTO;
+import com.eshan.library.services.borrowRecordDTO.BorrowRecordResponseDTO;
 
 import lombok.AllArgsConstructor;
 
@@ -27,6 +33,8 @@ public class BorrowRecordService {
     private final BorrowRecordRepository borrowRecordRepository;
     private final BookRepository bookRepository;
     private final StudentInfoRepository studentInfoRepository;
+    private final LibrarianRepository librarianRepository;
+    private final StudentRepository studentRepository;
     private final BookRequestRepository bookRequestRepository;
 
     public BorrowRecord save(BorrowRecordDTO dto) {
@@ -72,9 +80,32 @@ public class BorrowRecordService {
         }
         return borrowRecord;
     }
+    private BorrowRecordResponseDTO toBorrowRecordResponseDTO(BorrowRecord br){
+        Optional<Book> book = bookRepository.findByIsbn(br.getBook().getIsbn());
+        Optional<Student> student =studentRepository.findById(br.getStudent().getId());
+        Optional<Librarian> librarian = librarianRepository.findById(br.getLibrarian().getId());
+        Optional<BookRequest> brq =bookRequestRepository.findById(br.getBookRequest().getId());
+        if(book.isPresent() && librarian.isPresent() && student.isPresent() && brq.isPresent()){
+            return BorrowRecordResponseDTO.builder()
+            .isbn(book.get().getIsbn())
+            .returnDate(br.getReturnDate())
+            .isLost(br.getIsLost())
+            .fine(br.getFine())
+            .studentId(student.get().getId())
+            .librarianId(librarian.get().getId())
+            .borrowRecordId(br.getId())
+            .dueDate(br.getDueDate())
+            .borrowDate(br.getBorrowDate())
+            .bookRequestId(brq.get().getId())
+            .build();
+        }
+        else
+            return null;
 
-    public List<BorrowRecord> findAll() {
-        return borrowRecordRepository.findAll();
+    }
+
+    public Page<BorrowRecordResponseDTO> findAll(Integer pageNumber,Integer pageSize ) {
+        return borrowRecordRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(this::toBorrowRecordResponseDTO);
     }
 
     public void delete(Integer id) {

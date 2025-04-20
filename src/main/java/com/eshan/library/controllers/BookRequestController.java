@@ -2,15 +2,18 @@ package com.eshan.library.controllers;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,8 +44,10 @@ public class BookRequestController {
     }
 
     @GetMapping
-    public List<BookRequestResponseDTO> findAll() {
-        return bookRequestService.findAll();
+    public Page<BookRequestResponseDTO> findAll(
+            @RequestParam(name = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "5") int pageSize) {
+        return bookRequestService.findAll(pageNumber, pageSize);
     }
 
     @GetMapping("{Id}")
@@ -70,10 +75,24 @@ public class BookRequestController {
         }
     }
 
+    @DeleteMapping("/{Id}")
+    public ResponseEntity<String> deleteBook(@PathVariable("Id") Integer id) {
+        boolean deleted = bookRequestService.delete(id);
+
+        if (!deleted) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Book-request with id " + id + " not found.");
+        }
+        return ResponseEntity.ok("Book-request with id" + id + " deleted successfully.");
+    }
+
     @GetMapping("/librarian/{librarianId}")
-    public ResponseEntity<List<BookRequestResponseDTO>> getRequestsByLibrarian(@PathVariable Integer librarianId) {
+    public ResponseEntity<Page<BookRequestResponseDTO>> getRequestsByLibrarian(@PathVariable Integer librarianId,
+            @RequestParam(name = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "5") int pageSize) {
         try {
-            List<BookRequestResponseDTO> requests = bookRequestService.getRequestsForLibrarian(librarianId);
+            var requests = bookRequestService.getRequestsForLibrarian(librarianId, pageNumber,
+                    pageSize);
             return new ResponseEntity<>(requests, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -81,9 +100,12 @@ public class BookRequestController {
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<BookRequestResponseDTO>> getRequestsByStudent(@PathVariable Integer studentId) {
+    public ResponseEntity<Page<BookRequestResponseDTO>> getRequestsByStudent(@PathVariable Integer studentId,
+            @RequestParam(name = "page", defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "5") int pageSize) {
         try {
-            List<BookRequestResponseDTO> requests = bookRequestService.getRequestsForStudent(studentId);
+            var requests = bookRequestService.getRequestsForStudent(studentId, pageNumber,
+                    pageSize);
             return new ResponseEntity<>(requests, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

@@ -8,10 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@Data
-@AllArgsConstructor
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class LibrarianInfo {
     @Id
@@ -21,6 +21,11 @@ public class LibrarianInfo {
             unique = true
     )
     private Integer id;
+
+    @OneToOne( mappedBy = "librarianInfo",cascade = CascadeType.REMOVE)
+    @JsonBackReference("librarian-librarianInfo")
+    private Librarian librarian;
+
     @Column(
             nullable = false,
             unique = true
@@ -30,11 +35,6 @@ public class LibrarianInfo {
             nullable = false
     )
     private String name;
-
-    @OneToOne( mappedBy = "librarianInfo",cascade = CascadeType.REMOVE)
-    @JsonBackReference("librarian-librarianInfo")
-    private Librarian librarian;
-
     @ManyToOne
     @JoinColumn(name = "admin_id")
     @JsonBackReference

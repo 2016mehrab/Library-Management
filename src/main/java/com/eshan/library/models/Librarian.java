@@ -1,15 +1,6 @@
 package com.eshan.library.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,26 +15,35 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@NoArgsConstructor
+@Entity
 @Data
 @AllArgsConstructor
-@Entity
+@NoArgsConstructor
 @Builder
 public class Librarian implements UserDetails {
         @Id
-        @GeneratedValue
-        @Column(unique = true, nullable = false)
         private Integer id;
+
+        // @PrimaryKeyJoinColumn
+        @OneToOne
+        @MapsId
+        @JsonManagedReference("librarian-librarianInfo")
+        private LibrarianInfo librarianInfo;
+
         @Column(unique = true, nullable = false)
         private String username;
         private String password;
-        @OneToMany(mappedBy = "librarian", cascade = CascadeType.ALL, orphanRemoval = true)
+        // @OneToMany(mappedBy = "librarian", cascade = CascadeType.ALL, orphanRemoval =
+        // true)
+        @OneToMany(mappedBy = "librarian")
         @JsonManagedReference("bookrequest-librarian")
         private List<BookRequest> bookRequests;
-        @OneToOne
-        @JoinColumn(name = "librarian_id")
-        @JsonManagedReference("librarian-librarianInfo")
-        private LibrarianInfo librarianInfo;
+
+        // @OneToMany(mappedBy = "librarian", cascade = CascadeType.ALL, orphanRemoval =
+        // true)
+        @OneToMany(mappedBy = "librarian")
+        @JsonManagedReference("librarian-borrowrecord")
+        private List<BorrowRecord> borrowRecords;
 
         @Enumerated(EnumType.STRING)
         private Role role;

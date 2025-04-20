@@ -45,29 +45,29 @@ public class LibrarianService {
 
     // TODO: create a response dto
     public Librarian findLibrarianById(Integer id) {
-        LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
-        Librarian librarian = librarianRepository.findById(librarianInfo.getLibrarian().getId()).orElse(null);
+        // LibrarianInfo librarianInfo =
+        // librarianInfoRepository.findById(id).orElse(null);
+        Librarian librarian = librarianRepository.findById(id).orElse(null);
         return librarian;
     }
 
     private LibrarianResponseDTO toLibrarianResponseDTO(Librarian lib) {
-        return new LibrarianResponseDTO(
-                lib.getLibrarianInfo().getId());
+        return new LibrarianResponseDTO(lib.getId());
     }
 
     public List<LibrarianResponseDTO> findAllLibrarian() {
         return librarianRepository.findAll().stream().map(this::toLibrarianResponseDTO).collect(Collectors.toList());
     }
 
-
     public void deleteLibrarian(Integer id) {
-        LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
-        librarianRepository.deleteById(librarianInfo.getLibrarian().getId());
+        // LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
+        librarianRepository.deleteById(id);
     }
 
+    // TODO: check this
     public void updateLibrarianPassword(Librarian librarian, Integer id) {
-        LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
-        Librarian updatedL = librarianRepository.findById(librarianInfo.getLibrarian().getId()).orElse(null);
+        // LibrarianInfo librarianInfo = librarianInfoRepository.findById(id).orElse(null);
+        Librarian updatedL = librarianRepository.findById(id).orElse(null);
         if (librarian != null) {
             updatedL.setPassword(librarian.getPassword());
             librarianRepository.save(updatedL);

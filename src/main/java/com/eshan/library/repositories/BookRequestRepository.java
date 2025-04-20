@@ -4,11 +4,12 @@ import com.eshan.library.models.BookRequest;
 import com.eshan.library.models.Librarian;
 import com.eshan.library.models.Student;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 
+public interface BookRequestRepository extends JpaRepository<BookRequest, Integer> {
+    Page<BookRequest> findByLibrarian(Librarian librarian, Pageable pageable);
 
-public interface BookRequestRepository extends JpaRepository<BookRequest,Integer> {
-    List<BookRequest> findByLibrarian(Librarian librarian);
-    List<BookRequest> findByStudent(Student student);;
+    Page<BookRequest> findByStudent(Student student, Pageable pageable);
 }

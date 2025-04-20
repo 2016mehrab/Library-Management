@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.eshan.library.models.ApproveStatus;
@@ -80,70 +82,54 @@ public class BookRequestService {
         return bookRequest;
     }
 
-    // private BookRequestResponseDTO toBookRequestResponseDTO(BookRequestDTO
-    // bookRequestDTO) {
-    // Optional<Book> book = bookRepository.findByIsbn(bookRequestDTO.isbn());
-    // Optional<Student> student =
-    // studentRepository.findById(bookRequestDTO.studentId());
-    // Librarian librarian =
-    // librarianService.findLibrarianById(bookRequestDTO.librarianId());
-
-    // if (book.isPresent() && student.isPresent() && librarian != null) {
-    // return BookRequestResponseDTO.builder().isbn(bookRequestDTO.isbn())
-    // .librarianId(bookRequestDTO.librarianId())
-    // .studentId(bookRequestDTO.studentId())
-    // .status(book.ge)
-    // .build();
-    // }
-    // else{
-    // throw new RuntimeException("Operation was not successful: Librarian Not
-    // Found!");
-    // }
-    // }
-
     private BookRequestResponseDTO toBookRequestResponseDTO(BookRequest br) {
         Optional<Book> book = bookRepository.findByIsbn(br.getBook().getIsbn());
         Optional<Student> student = studentRepository.findById(br.getStudent().getId());
-        Librarian librarian = librarianService.findLibrarianById(br.getLibrarian().getLibrarianInfo().getId());
+        // Librarian librarian = librarianService.findLibrarianById(br.getLibrarian().getLibrarianInfo().getId());
+        Optional<Librarian> librarian = librarianRepository.findById(br.getLibrarian().getId());
 
-        if (book.isPresent() && student.isPresent() && librarian != null) {
+        if (book.isPresent() && student.isPresent() && librarian .isPresent()) {
             return BookRequestResponseDTO.builder().isbn(book.get().getIsbn())
-                    .librarianId(librarian.getLibrarianInfo().getId())
+                    .librarianId(librarian.get().getId())
                     .studentId(student.get().getId())
                     .id(br.getId())
                     .status(br.getApproveStatus())
+                    .requestDate(br.getRequestDate())
                     .build();
         } else
             return null;
     }
 
-    // public List<BookRequest> findAll() {
-    // return bookRequestRepository.findAll();
 
-    // }
-    public List<BookRequestResponseDTO> findAll() {
-        return bookRequestRepository.findAll().stream().map(this::toBookRequestResponseDTO)
-                .collect(Collectors.toList());
+    public Page<BookRequestResponseDTO> findAll(Integer pageNumber, Integer pageSize) {
+        var page= bookRequestRepository.findAll(PageRequest.of(pageNumber, pageSize));
+        return page.map(this::toBookRequestResponseDTO);
+
+        // return bookRequestRepository.findAll().stream().map(this::toBookRequestResponseDTO)
+                // .collect(Collectors.toList());
 
     }
 
-    public List<BookRequestResponseDTO> getRequestsForLibrarian(Integer librarianId) {
-        Optional<Librarian> lb = librarianRepository.findByLibrarianInfo_Id(librarianId);
+    public Page<BookRequestResponseDTO> getRequestsForLibrarian(Integer librarianId, Integer pageNumber, Integer pageSize) {
+        Optional<Librarian> lb = librarianRepository.findById(librarianId);
         if (lb.isPresent()) {
-            return bookRequestRepository.findByLibrarian(lb.get()).stream().map(this::toBookRequestResponseDTO)
-                    .collect(Collectors.toList());
-
+            var page = bookRequestRepository.findByLibrarian(lb.get(), PageRequest.of(pageNumber, pageSize));
+            return page.map(this::toBookRequestResponseDTO);
+            // return bookRequestRepository.findByLibrarian(lb.get()).stream().map(this::toBookRequestResponseDTO)
+                    // .collect(Collectors.toList());
         } else {
             throw new RuntimeException("Operation was not successful: Librarian does not exist");
         }
 
     }
 
-    public List<BookRequestResponseDTO> getRequestsForStudent(Integer studentid) {
+    public Page<BookRequestResponseDTO> getRequestsForStudent(Integer studentid, Integer pageNumber, Integer pageSize) {
         Optional<Student> st = studentRepository.findById(studentid);
         if (st.isPresent()) {
-            return bookRequestRepository.findByStudent(st.get()).stream().map(this::toBookRequestResponseDTO)
-                    .collect(Collectors.toList());
+            var page = bookRequestRepository.findByStudent(st.get(), PageRequest.of(pageNumber,pageSize ));
+            return page.map(this::toBookRequestResponseDTO);
+            // return bookRequestRepository.findByStudent(st.get()).stream().map(this::toBookRequestResponseDTO)
+            //         .collect(Collectors.toList());
 
         } else {
             throw new RuntimeException("Operation was not successful: student does not exist");
@@ -160,8 +146,14 @@ public class BookRequestService {
 
     }
 
-    public void delete(Integer id) {
-        bookRequestRepository.deleteById(id);
+    public boolean delete(Integer id) {
+
+        var exists = bookRequestRepository.existsById(id);
+        if (exists) {
+            bookRequestRepository.deleteById(id);
+            return true;
+        } else
+            return false;
     }
 
     public void updateStatus(StatusUpdateDTO dto, Integer id) {

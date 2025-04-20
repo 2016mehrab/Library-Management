@@ -2,6 +2,7 @@ package com.eshan.library.controllers;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,36 +46,22 @@ public class BookController {
         }
     }
 
-    // @GetMapping("{Id}")
-    // public Book findById(@PathVariable("Id") String isbn) {
-    // return bookService.findByIsbn(isbn);
-    // }
-
-    // // TODO: Implement response DTO
-    // @GetMapping
-    // public List<Book> findAll() {
-
-    // return bookService.findAll();
-    // }
-
     @GetMapping("{Id}")
     public BookResponseDTO findById(@PathVariable("Id") String isbn) {
         return bookService.findByIsbn(isbn);
     }
 
     @GetMapping
-    public List<BookResponseDTO> findAll(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int pageSize, @RequestParam(defaultValue = "title") List<String> sortBy,
-            @RequestParam(defaultValue = "asc") String order) {
+    public Page<BookResponseDTO> findAll(
+        @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize,
+             @RequestParam(defaultValue = "title") List<String> sortBy,
+            @RequestParam(defaultValue = "asc") String order
+            ) {
         Direction sortOrder = Direction.fromString(order);
         return bookService.findAll(page, pageSize, sortBy, sortOrder);
     }
 
-    // @DeleteMapping("{Id}")
-    // @ResponseStatus(HttpStatus.OK)
-    // public void deleteLibrarian(@PathVariable("Id") String isbn) {
-    // bookService.delete(isbn);
-    // }
 
     @DeleteMapping("/{Id}")
     public ResponseEntity<String> deleteBook(@PathVariable("Id") String isbn) {

@@ -44,6 +44,11 @@ public class BorrowRecord {
         @JsonBackReference("student-borrowrecord")
         private Student student;
 
+        @ManyToOne
+        @JoinColumn(name = "librarian_id", referencedColumnName = "id")
+        @JsonBackReference("librarian-borrowrecord")
+        private Librarian librarian;
+
         @OneToOne
         @JoinColumn(name = "request_id")
         @JsonManagedReference("bookrequest-borrowrecord")
@@ -59,9 +64,12 @@ public class BorrowRecord {
 
         @Override
         public String toString() {
-                return "BorrowRecord [fine=" + fine + ", isLost=" + isLost + ", borrowDate=" + borrowDate + ", dueDate="
-                                + dueDate + ", returnDate=" + returnDate + ", book=" + book.getTitle() + ", student=" + student
+                return "BorrowRecord [id=" + id + ", fine=" + fine + ", isLost=" + isLost + ", borrowDate=" + borrowDate
+                                + ", dueDate=" + dueDate + ", returnDate=" + returnDate + ", book=" + book.getIsbn()
+                                + ", student=" + student.getId() + ", librarian=" + librarian.getId() + ", bookRequest=" + bookRequest.getId()
                                 + "]";
         }
+
+ 
 
 }

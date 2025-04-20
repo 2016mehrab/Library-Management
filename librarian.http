@@ -2,8 +2,8 @@
 @librarian-url=http://127.0.0.1:8080/librarians
 @book-url=http://localhost:8080/books 
 @bookrequest-url=http://127.0.0.1:8080/bookrequests
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3NDE0MzEyNjMsImV4cCI6MTc0MTUxNzY2M30.TnW_YEFHtKQhMMGbM0NWeY4M3LLQH4120AlC-974vjY
-@student-auth-token=
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwidXNlcklkIjoxMDEsInN1YiI6IkxfcmFobWFuIiwiaWF0IjoxNzQ0Mzg0OTU5LCJleHAiOjE3NDQ0NzEzNTl9.LQpWgFpMqZvLSnw79d4nOxH1Pdem2juNTDBMAXpK4V0
+@student-auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3NDE3NzUyODEsImV4cCI6MTc0MTg2MTY4MX0.ujo5GkxH9qNDYS2kumMbGS-jq0dCmfRLHRzy-t2SsDY
 
 ###
 ###
@@ -39,7 +39,7 @@ Content-Type: application/json
     "title": "Prochur Koshto I",
     "quantity": 4,
     "price": 29.99,
-    "coverLink": "http://dummylink9.com",
+    "coverLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWTwShHrDMcWf36xV2-WtIPcZ3mmckPyzkTQ&s",
     "categories": ["Horror", "Romance"],
     "authors": ["Monsur", "Atik"]
 }
@@ -53,7 +53,7 @@ Content-Type: application/json
     "title": "Britha",
     "quantity": 1,
     "price": 19.99,
-    "coverLink": "http://aummylink2.com",
+    "coverLink":"https://m.media-amazon.com/images/I/51ZClf6ApnL._SL500_.jpg",
     "categories": ["Romance", "Thriller"],
     "authors": ["Arnil", "Saikat"]
 }
@@ -67,7 +67,7 @@ Content-Type: application/json
     "title": "To Kill a Mockingbird",
     "quantity": 5,
     "price": 10.99,
-    "coverLink": "http://dummylink3.com",
+    "coverLink": "https://media.glamour.com/photos/56e1f3c562b398fa64cbd310/master/w_1600%2Cc_limit/entertainment-2016-02-07-main.jpg",
     "categories": ["Classic", "Drama"],
     "authors": ["Harper", "Lee"]
 }
@@ -82,7 +82,7 @@ Content-Type: application/json
         "title": "The Great Gatsby",
         "quantity": 2,
         "price": 15.99,
-        "coverLink": "http://dummylink2.com",
+        "coverLink": "https://i.pinimg.com/736x/9f/6f/81/9f6f81ec648dcbdf6691f2f590bd2b5b.jpg",
         "categories": ["Classic", "Novel"],
         "authors": ["F. Scott", "Fitzgerald"]
 }
@@ -96,7 +96,7 @@ Content-Type: application/json
     "title": "The Lost World",
     "quantity": 3,
     "price": 25.99,
-    "coverLink": "http://dummylink1.com",
+    "coverLink": "https://m.media-amazon.com/images/I/81YKkTLw6LL._AC_UF894,1000_QL80_.jpg",
     "categories": ["Adventure", "Sci-Fi"],
     "authors": ["John", "Doe"]
 }
@@ -110,22 +110,22 @@ Content-Type: application/json
     "title": "Prochur Koshto II",
     "quantity": 2,
     "price": 39.99,
-    "coverLink": "http://dummylink2.com",
+    "coverLink": "https://mir-s3-cdn-cf.behance.net/projects/404/75f31f96918231.Y3JvcCwxMTc0LDkxOCwwLDE1OQ.png",
     "categories": ["Fantasy", "Action"],
     "authors": ["Monsur", "Mirsil"]
 }
 ###
-GET {{book-url}}?pageSize=2&pageNum=1&sortBy=quantity&dir=desc
+GET {{book-url}}?pageSize=5&page=0&sortBy=quantity&dir=desc
 Authorization: Bearer {{auth-token}}
 ###
-GET {{book-url}}/978-3-21-098765-2
+GET {{book-url}}/1234567890
 Authorization: Bearer {{auth-token}}
 
 ### REVIEWING BOOKSREQUESTS
 GET {{bookrequest-url}}
 Authorization: Bearer {{auth-token}}
 ### 
-GET {{bookrequest-url}}/1
+GET {{bookrequest-url}}/librarian/101
 Authorization: Bearer {{auth-token}}
 ###  REJECTING BOOK REQUEST
 PUT {{bookrequest-url}}/1/status

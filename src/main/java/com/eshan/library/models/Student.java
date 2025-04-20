@@ -22,13 +22,14 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Builder
 public class Student implements UserDetails{
         @Id
-        @Column(name = "student_id")
         private Integer id;
+
         @OneToOne
         @MapsId
-        @JoinColumn(name = "student_id", referencedColumnName = "id")
+        // @JoinColumn(name = "student_id")
         @JsonManagedReference("student-studentInfo")
         private StudentInfo studentInfo;
+
         @Column(unique = true, nullable = false)
         private String username;
         private String password;

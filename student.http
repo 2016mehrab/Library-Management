@@ -7,7 +7,7 @@
 
 @auth-url=http://127.0.0.1:8080/student-auth
 
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6IlNfbm9vciIsImlhdCI6MTczODQyNjQyOCwiZXhwIjoxNzM4NTEyODI4fQ.eo1gXOuvm6_fm0b7TEjZeYAPOjwakw9Avn4G4L3GCsw
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInVzZXJJZCI6MjAxMDE0OTQsInN1YiI6IlNfbm9vciIsImlhdCI6MTc0MjM3NTI0NCwiZXhwIjoxNzQyNDYxNjQ0fQ.-anAOZ8DTk5-JSyQarJnCG74XafQZUYQgEHZc7c94HQ
 ###
 POST {{auth-url}}/register
 Content-Type: application/json
@@ -23,11 +23,11 @@ POST {{auth-url}}/authenticate
 Content-Type: application/json
 
 {
-    "username": "ashen",
-    "password": "ashen"
+    "username": "noor",
+    "password": "noor"
 }
 ###
-GET {{book-url}}/1234567890
+GET {{book-url}}/1234567892
 ###
 GET {{book-url}}
 ### STUDENT
@@ -83,13 +83,13 @@ Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
-    "isbn":"6677889900",
+    "isbn":"1234567892",
     "librarianId":101,
     "studentId":20101494
 
 }
 ### 
-GET {{bookrequest-url}}
+GET {{bookrequest-url}}/student/20101494
 Authorization: Bearer {{auth-token}}
 ### 
 GET {{bookrequest-url}}/2
@@ -112,7 +112,7 @@ Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
 {
-    "isbn":"6677889900",
+    "isbn":"1234567892",
     "studentId":20101494,
     "bookRequestId":2
 
@@ -126,29 +126,29 @@ GET {{borrowrecord-url}}/1
 Authorization: Bearer {{auth-token}}
 
 ### RETURNING BOOKS
-PUT {{borrowrecord-url}}/252/return
+PUT {{borrowrecord-url}}/1/return
 Authorization: Bearer {{auth-token}}
 ###
-PUT {{borrowrecord-url}}/253/return
+PUT {{borrowrecord-url}}/2/return
 Authorization: Bearer {{auth-token}}
 
 ### CHECKING DELAY FINES
-PUT {{borrowrecord-url}}/252/fine
+PUT {{borrowrecord-url}}/1/fine
 Authorization: Bearer {{auth-token}}
 ### 
-PUT {{borrowrecord-url}}/253/fine
+PUT {{borrowrecord-url}}/2/fine
 Authorization: Bearer {{auth-token}}
 
 ### CHECKING FINES WITH BOOKLOST
-PUT {{borrowrecord-url}}/252/booklost
+PUT {{borrowrecord-url}}/1/booklost
 Authorization: Bearer {{auth-token}}
 ### 
-PUT {{borrowrecord-url}}/252/fine
+PUT {{borrowrecord-url}}/1/fine
 Authorization: Bearer {{auth-token}}
 ### 
-PUT {{borrowrecord-url}}/253/booklost
+PUT {{borrowrecord-url}}/52/booklost
 Authorization: Bearer {{auth-token}}
 ### 
-PUT {{borrowrecord-url}}/253/fine
+PUT {{borrowrecord-url}}/2/fine
 Authorization: Bearer {{auth-token}}
 ### 

@@ -2,6 +2,7 @@ package com.eshan.library.controllers;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eshan.library.models.BorrowRecord;
 import com.eshan.library.services.BorrowRecordService;
 import com.eshan.library.services.borrowRecordDTO.BorrowRecordDTO;
+import com.eshan.library.services.borrowRecordDTO.BorrowRecordResponseDTO;
 
 import lombok.AllArgsConstructor;
 
@@ -41,9 +44,12 @@ public class BorrowRecordController {
     }
 
     @GetMapping
-    public List<BorrowRecord> findAll() {
+    public Page<BorrowRecordResponseDTO> findAll(
+            @RequestParam(name = "page", defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize
 
-        return borrowRecordService.findAll();
+    ) {
+        return borrowRecordService.findAll(pageNumber, pageSize);
     }
 
     @DeleteMapping("{Id}")
@@ -71,7 +77,7 @@ public class BorrowRecordController {
             @PathVariable("Id") Integer id) {
         try {
             borrowRecordService.bookLost(id);
-            var fine =borrowRecordService.updateFine(id);
+            var fine = borrowRecordService.updateFine(id);
             return new ResponseEntity<>(fine, HttpStatus.OK);
 
         } catch (Exception e) {

@@ -47,7 +47,7 @@ public class BookRequest {
                 this.approveStatus = ApproveStatus.PENDING;
         }
 
-        @OneToOne(mappedBy = "bookRequest", cascade = CascadeType.REMOVE)
+        @OneToOne(mappedBy = "bookRequest")
         @JsonBackReference("bookrequest-borrowrecord")
         private BorrowRecord borrowRecord;
 

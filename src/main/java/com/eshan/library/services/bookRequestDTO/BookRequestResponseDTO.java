@@ -1,5 +1,7 @@
 package com.eshan.library.services.bookRequestDTO;
 
+import java.time.LocalDateTime;
+
 import com.eshan.library.models.ApproveStatus;
 
 import lombok.AllArgsConstructor;
@@ -17,5 +19,6 @@ public class BookRequestResponseDTO {
     private Integer studentId;
     private Integer librarianId;
     private ApproveStatus status;
+    private LocalDateTime requestDate;
 
 }

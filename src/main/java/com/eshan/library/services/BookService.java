@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -94,10 +95,10 @@ public class BookService {
         }
     }
 
-    public List<BookResponseDTO> findAll(int pageNum, int pageSize, List<String> sortby, Direction dir) {
+    public Page<BookResponseDTO> findAll(int pageNum, int pageSize, List<String> sortby, Direction dir) {
         Sort sort = Sort.by(dir, sortby.toArray(new String[0]));
         Pageable pg = PageRequest.of(pageNum, pageSize, sort);
-        return bookRepository.findAll(pg).map(this::toBookResponseDTO).getContent();
+        return  bookRepository.findAll(pg).map(this::toBookResponseDTO);
     }
 
     // public Book findByIsbn(String isbn) {
@@ -114,6 +115,7 @@ public class BookService {
     // public List<Book> findAll() {
     // return bookRepository.findAll();
     // }
+
 
     public boolean delete(String isbn) {
         if (!bookRepository.findByIsbn(isbn).isPresent()) {
