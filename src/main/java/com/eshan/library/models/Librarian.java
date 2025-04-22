@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Builder
 public class Librarian implements UserDetails {
         @Id
-        private Integer id;
+        private Integer profileId;
 
         // @PrimaryKeyJoinColumn
         @OneToOne
@@ -75,6 +75,6 @@ public class Librarian implements UserDetails {
 
         @Override
         public String toString() {
-                return "Librarian{id=" + id + ", username='" + username + "', role=" + role + "}";
+                return "Librarian{id=" + profileId + ", username='" + username + "', role=" + role + "}";
         }
 }

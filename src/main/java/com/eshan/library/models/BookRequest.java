@@ -25,7 +25,6 @@ public class BookRequest {
         @Column(name = "request_date", insertable = true, updatable = false, nullable = false)
         private LocalDateTime requestDate;
         @ManyToOne
-        @JoinColumn(name = "librarian_id")
         @JsonBackReference("bookrequest-librarian")
         private Librarian librarian;
         @ManyToOne

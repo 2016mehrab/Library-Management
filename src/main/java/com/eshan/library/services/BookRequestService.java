@@ -86,11 +86,11 @@ public class BookRequestService {
         Optional<Book> book = bookRepository.findByIsbn(br.getBook().getIsbn());
         Optional<Student> student = studentRepository.findById(br.getStudent().getId());
         // Librarian librarian = librarianService.findLibrarianById(br.getLibrarian().getLibrarianInfo().getId());
-        Optional<Librarian> librarian = librarianRepository.findById(br.getLibrarian().getId());
+        Optional<Librarian> librarian = librarianRepository.findById(br.getLibrarian().getProfileId());
 
         if (book.isPresent() && student.isPresent() && librarian .isPresent()) {
             return BookRequestResponseDTO.builder().isbn(book.get().getIsbn())
-                    .librarianId(librarian.get().getId())
+                    .librarianId(librarian.get().getProfileId())
                     .studentId(student.get().getId())
                     .id(br.getId())
                     .status(br.getApproveStatus())

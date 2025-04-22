@@ -45,7 +45,6 @@ public class BorrowRecord {
         private Student student;
 
         @ManyToOne
-        @JoinColumn(name = "librarian_id", referencedColumnName = "id")
         @JsonBackReference("librarian-borrowrecord")
         private Librarian librarian;
 
@@ -66,7 +65,7 @@ public class BorrowRecord {
         public String toString() {
                 return "BorrowRecord [id=" + id + ", fine=" + fine + ", isLost=" + isLost + ", borrowDate=" + borrowDate
                                 + ", dueDate=" + dueDate + ", returnDate=" + returnDate + ", book=" + book.getIsbn()
-                                + ", student=" + student.getId() + ", librarian=" + librarian.getId() + ", bookRequest=" + bookRequest.getId()
+                                + ", student=" + student.getId() + ", librarian=" + librarian.getProfileId() + ", bookRequest=" + bookRequest.getId()
                                 + "]";
         }
 

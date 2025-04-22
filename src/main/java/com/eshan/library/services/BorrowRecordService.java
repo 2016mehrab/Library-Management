@@ -83,8 +83,9 @@ public class BorrowRecordService {
     private BorrowRecordResponseDTO toBorrowRecordResponseDTO(BorrowRecord br){
         Optional<Book> book = bookRepository.findByIsbn(br.getBook().getIsbn());
         Optional<Student> student =studentRepository.findById(br.getStudent().getId());
-        Optional<Librarian> librarian = librarianRepository.findById(br.getLibrarian().getId());
+        Optional<Librarian> librarian = librarianRepository.findById(br.getLibrarian().getProfileId());
         Optional<BookRequest> brq =bookRequestRepository.findById(br.getBookRequest().getId());
+
         if(book.isPresent() && librarian.isPresent() && student.isPresent() && brq.isPresent()){
             return BorrowRecordResponseDTO.builder()
             .isbn(book.get().getIsbn())
@@ -92,7 +93,7 @@ public class BorrowRecordService {
             .isLost(br.getIsLost())
             .fine(br.getFine())
             .studentId(student.get().getId())
-            .librarianId(librarian.get().getId())
+            .librarianId(librarian.get().getProfileId())
             .borrowRecordId(br.getId())
             .dueDate(br.getDueDate())
             .borrowDate(br.getBorrowDate())
