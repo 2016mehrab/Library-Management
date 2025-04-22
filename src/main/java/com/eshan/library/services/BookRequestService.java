@@ -27,6 +27,7 @@ import com.eshan.library.services.bookRequestDTO.BookRequestResponseDTO;
 import com.eshan.library.services.bookRequestDTO.StatusUpdateDTO;
 
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -39,6 +40,7 @@ public class BookRequestService {
     private final LibrarianRepository librarianRepository;
     private final LibrarianService librarianService;
 
+    @Transactional
     public BookRequest save(BookRequestDTO dto) {
         var bookRequest = toBookRequest(dto);
         return bookRequestRepository.save(bookRequest);
@@ -101,6 +103,7 @@ public class BookRequestService {
     }
 
 
+    @Transactional(readOnly = true)
     public Page<BookRequestResponseDTO> findAll(Integer pageNumber, Integer pageSize) {
         var page= bookRequestRepository.findAll(PageRequest.of(pageNumber, pageSize));
         return page.map(this::toBookRequestResponseDTO);
@@ -110,6 +113,7 @@ public class BookRequestService {
 
     }
 
+    @Transactional(readOnly = true)
     public Page<BookRequestResponseDTO> getRequestsForLibrarian(Integer librarianId, Integer pageNumber, Integer pageSize) {
         Optional<Librarian> lb = librarianRepository.findById(librarianId);
         if (lb.isPresent()) {
@@ -123,6 +127,7 @@ public class BookRequestService {
 
     }
 
+    @Transactional(readOnly = true)
     public Page<BookRequestResponseDTO> getRequestsForStudent(Integer studentid, Integer pageNumber, Integer pageSize) {
         Optional<Student> st = studentRepository.findById(studentid);
         if (st.isPresent()) {
@@ -137,6 +142,7 @@ public class BookRequestService {
 
     }
 
+    @Transactional(readOnly = true)
     public BookRequestResponseDTO findById(Integer id) {
         if (bookRequestRepository.findById(id).isPresent()) {
             return toBookRequestResponseDTO(bookRequestRepository.findById(id).get());
@@ -146,6 +152,7 @@ public class BookRequestService {
 
     }
 
+    @Transactional
     public boolean delete(Integer id) {
 
         var exists = bookRequestRepository.existsById(id);
@@ -156,26 +163,55 @@ public class BookRequestService {
             return false;
     }
 
+//    @Transactional
+//    public void updateStatus(StatusUpdateDTO dto, Integer id) {
+//        BookRequest bookRequest = bookRequestRepository.findById(id).orElse(null);
+//        if (bookRequest != null) {
+//            if (dto.approveStatus() == ApproveStatus.APPROVED ) {
+//                var book =bookRequest.getBook();
+//                if(book.getQuantity() > 0){
+//                    // set status
+//                    bookRequest.setApproveStatus(dto.approveStatus());
+//                    // decrement quantity
+//                    var prev = book.getQuantity();
+//                    book.setQuantity(prev-1);
+//                    // save to db
+//                    bookRequestRepository.save(bookRequest);
+//
+//                }
+//            } else if (dto.approveStatus() != ApproveStatus.APPROVED) {
+//                // set status
+//                bookRequest.setApproveStatus(dto.approveStatus());
+//                // save to db
+//                bookRequestRepository.save(bookRequest);
+//            } else {
+//                throw new RuntimeException("Operation was not successful: Book not available");
+//            }
+//
+//        } else {
+//            throw new RuntimeException("Operation was not successful: BookRequest does not exist!");
+//        }
+//    }
+
+    @Transactional
     public void updateStatus(StatusUpdateDTO dto, Integer id) {
-        BookRequest bookRequest = bookRequestRepository.findById(id).orElse(null);
-        if (bookRequest != null) {
-            if (dto.approveStatus() == ApproveStatus.APPROVED && bookRequest.getBook().getQuantity() > 0) {
-                // set status
-                bookRequest.setApproveStatus(dto.approveStatus());
-                // save to db
-                bookRequestRepository.save(bookRequest);
-            } else if (dto.approveStatus() != ApproveStatus.APPROVED) {
-                // set status
-                bookRequest.setApproveStatus(dto.approveStatus());
-                // save to db
-                bookRequestRepository.save(bookRequest);
-            } else {
-                throw new RuntimeException("Operation was not successful: Book not available");
+        BookRequest bookRequest = bookRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("BookRequest does not exist!"));
+
+        if (dto.approveStatus() == ApproveStatus.APPROVED) {
+            Book book = bookRequest.getBook();
+
+            if (book.getQuantity() <= 0) {
+                throw new RuntimeException("Book not available");
             }
 
-        } else {
-            throw new RuntimeException("Operation was not successful: BookRequest does not exist!");
+            // Atomic decrement in database
+            int updatedRows = bookRepository.decrementQuantity(book.getId());
+            if (updatedRows == 0) {
+                throw new RuntimeException("Failed to decrement quantity - book may be out of stock");
+            }
         }
+        bookRequest.setApproveStatus(dto.approveStatus());
+        bookRequestRepository.save(bookRequest);
     }
-
 }

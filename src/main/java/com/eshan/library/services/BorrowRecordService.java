@@ -26,6 +26,7 @@ import com.eshan.library.services.borrowRecordDTO.BorrowRecordDTO;
 import com.eshan.library.services.borrowRecordDTO.BorrowRecordResponseDTO;
 
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -37,12 +38,10 @@ public class BorrowRecordService {
     private final StudentRepository studentRepository;
     private final BookRequestRepository bookRequestRepository;
 
+    @Transactional
     public BorrowRecord save(BorrowRecordDTO dto) {
         var borrowRecord = toBorrowRecord(dto);
         var bookRequest = bookRequestRepository.findById(dto.bookRequestId());
-        // book quantity reduce
-        var currQuantity= borrowRecord.getBook().getQuantity();
-        borrowRecord.getBook().setQuantity(currQuantity-1);
 
         if (bookRequest.isPresent() && bookRequest.get().getApproveStatus() == ApproveStatus.APPROVED) {
             return borrowRecordRepository.save(borrowRecord);
@@ -78,8 +77,16 @@ public class BorrowRecordService {
         } else {
             throw new RuntimeException("Operation was not successful: BookRequest does not exist!");
         }
+
+        var librarian = BR.getLibrarian();
+        if (librarian != null) {
+            borrowRecord.setLibrarian(librarian);
+        } else {
+            throw new RuntimeException("Operation was not successful: Librarian does not exist!");
+        }
         return borrowRecord;
     }
+
     private BorrowRecordResponseDTO toBorrowRecordResponseDTO(BorrowRecord br){
         Optional<Book> book = bookRepository.findByIsbn(br.getBook().getIsbn());
         Optional<Student> student =studentRepository.findById(br.getStudent().getId());
@@ -105,28 +112,46 @@ public class BorrowRecordService {
 
     }
 
+    @Transactional(readOnly = true)
     public Page<BorrowRecordResponseDTO> findAll(Integer pageNumber,Integer pageSize ) {
         return borrowRecordRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(this::toBorrowRecordResponseDTO);
     }
 
+    @Transactional
     public void delete(Integer id) {
         borrowRecordRepository.deleteById(id);
     }
 
+//    @Transactional
+//    public void returnBook(Integer id) {
+//        BorrowRecord borrowRecord = borrowRecordRepository.findById(id).orElse(null);
+//
+//        if (borrowRecord != null) {
+//        // book quantity increase
+//            var currQuantity= borrowRecord.getBook().getQuantity();
+//            borrowRecord.getBook().setQuantity(currQuantity+1);
+//        // book returned now
+//            borrowRecord.setReturnDate(LocalDateTime.now());
+//            borrowRecordRepository.save(borrowRecord);
+//
+//        } else {
+//            throw new RuntimeException("Operation was not successful: BookRecord does not exist!");
+//        }
+//    }
+
+    @Transactional
     public void returnBook(Integer id) {
-        BorrowRecord borrowRecord = borrowRecordRepository.findById(id).orElse(null);
-        if (borrowRecord != null) {
-        // book quantity increase
-            var currQuantity= borrowRecord.getBook().getQuantity();
-            borrowRecord.getBook().setQuantity(currQuantity);
-        // book returned now
-            borrowRecord.setReturnDate(LocalDateTime.now());
-            borrowRecordRepository.save(borrowRecord);
-        } else {
-            throw new RuntimeException("Operation was not successful: BookRecord does not exist!");
+        BorrowRecord borrowRecord = borrowRecordRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("BookRecord does not exist!"));
+
+        int updated = bookRepository.incrementQuantity(borrowRecord.getBook().getId());
+        if (updated == 0) {
+            throw new RuntimeException("Failed to update book quantity");
         }
+        borrowRecord.setReturnDate(LocalDateTime.now());
     }
 
+    @Transactional
     public void bookLost(Integer id) {
         BorrowRecord borrowRecord = borrowRecordRepository.findById(id).orElse(null);
         if (borrowRecord != null) {
@@ -141,6 +166,7 @@ public class BorrowRecordService {
         }
     }
 
+    @Transactional
     public double updateFine(Integer id) {
         BorrowRecord borrowRecord = borrowRecordRepository.findById(id).orElse(null);
         if (borrowRecord != null) {
