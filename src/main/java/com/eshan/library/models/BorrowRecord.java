@@ -1,5 +1,6 @@
 package com.eshan.library.models;
 
+import com.eshan.library.constants.Constants;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,7 +58,7 @@ public class BorrowRecord {
         protected void onCreate() {
                 this.borrowDate = LocalDateTime.now();
                 this.isLost = false;
-                this.dueDate = this.borrowDate.plusDays(7);
+                this.dueDate = this.borrowDate.plusDays(Constants.MAX_BORROW_DAYS);
                 this.fine = 0.0;
         }
 

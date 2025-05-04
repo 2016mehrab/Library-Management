@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                                 // "http://localhost:5173/requested-books",
                                 // "http://localhost:5173/review-requests"
                                 ));
-                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                config.setAllowedMethods(List.of("GET", "POST", "PUT","PATCH", "DELETE"));
                 config.setAllowedHeaders(
                                 List.of(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION));
                 config.setAllowCredentials(true);

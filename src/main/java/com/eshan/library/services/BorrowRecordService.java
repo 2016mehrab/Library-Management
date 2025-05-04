@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import com.eshan.library.constants.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -122,15 +123,50 @@ public class BorrowRecordService {
     }
 
     @Transactional
-    public void returnBook(Integer id) {
+    public void returnBook(Integer id ) {
         BorrowRecord borrowRecord = borrowRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("BookRecord does not exist!"));
+                .orElseThrow(() -> new RuntimeException("BorrowRecord does not exist!"));
 
+        LocalDateTime dueDateTime = borrowRecord.getDueDate();
+        LocalDateTime returnedDateTime = LocalDateTime.now();
+        LocalDate dueDate = dueDateTime.toLocalDate();
+        LocalDate returnedDate = returnedDateTime.toLocalDate();
+        long daysBetween = returnedDate.toEpochDay() - dueDate.toEpochDay();
+
+        double fine =  0.0;
+        if (daysBetween > 0) {
+            fine += daysBetween * Constants.FINE_PER_DAY;
+            borrowRecord.setFine(fine);
+        }
         int updated = bookRepository.incrementQuantity(borrowRecord.getBook().getId());
         if (updated == 0) {
             throw new RuntimeException("Failed to update book quantity");
         }
-        borrowRecord.setReturnDate(LocalDateTime.now());
+        borrowRecord.setReturnDate(returnedDateTime);
+        borrowRecordRepository.save(borrowRecord);
+    }
+
+    @Transactional
+    public void testReturnBook(Integer id,Integer delay ) {
+        BorrowRecord borrowRecord = borrowRecordRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("BorrowRecord does not exist!"));
+
+        LocalDateTime dueDateTime = borrowRecord.getDueDate();
+        LocalDateTime returnedDateTime = borrowRecord.getBorrowDate().plusDays(delay) ;
+        LocalDate dueDate = dueDateTime.toLocalDate();
+        LocalDate returnedDate = returnedDateTime.toLocalDate();
+        long daysBetween = returnedDate.toEpochDay() - dueDate.toEpochDay();
+
+        double fine =  0.0;
+        if (daysBetween > 0) {
+            fine += daysBetween * Constants.FINE_PER_DAY;
+            borrowRecord.setFine(fine);
+        }
+        int updated = bookRepository.incrementQuantity(borrowRecord.getBook().getId());
+        if (updated == 0) {
+            throw new RuntimeException("Failed to update book quantity");
+        }
+        borrowRecord.setReturnDate(returnedDateTime);
         borrowRecordRepository.save(borrowRecord);
     }
 
