@@ -6,4 +6,5 @@ public final class Constants {
     }
     public static final double  FINE_PER_DAY = 10;
     public static final int  MAX_BORROW_DAYS = 7;
+    public static final String  PAGE_SIZE = "10";
 }
