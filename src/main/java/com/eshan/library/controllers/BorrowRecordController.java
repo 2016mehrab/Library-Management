@@ -52,6 +52,23 @@ public class BorrowRecordController {
         return borrowRecordService.findAll(pageNumber, pageSize);
     }
 
+    @GetMapping("/ongoing")
+    public Page<BorrowRecordResponseDTO> ongoingBorrowRecords(
+            @RequestParam(name = "page", defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize
+
+    ) {
+        return borrowRecordService.findOngoingBorrows(pageNumber,pageSize);
+    }
+
+    @GetMapping("/history")
+    public Page<BorrowRecordResponseDTO> borrowHistory(
+            @RequestParam(name = "page", defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize
+    ) {
+        return borrowRecordService.getBorrowHistory(pageNumber,pageSize);
+    }
+
     @DeleteMapping("{Id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable("Id") Integer id) {
@@ -70,6 +87,17 @@ public class BorrowRecordController {
         }
     }
 
+    @PutMapping("{Id}/test-return")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> testBookReturn(@PathVariable("Id") Integer id) {
+        try {
+            borrowRecordService.returnBook(id);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
     // TODO: add fines for loosing book
     @PutMapping("{Id}/booklost")
     @ResponseStatus(HttpStatus.OK)

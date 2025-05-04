@@ -29,30 +29,13 @@ public class SecurityConfiguration {
         private final AuthenticationProvider authenticationProvider;
 
         @Bean
-        public WebMvcConfigurer corsConfig() {
-                return new WebMvcConfigurer() {
-                        public void addCorsMappings(CorsRegistry registry) {
-                                WebMvcConfigurer.super.addCorsMappings(registry);
-                                registry.addMapping("/**")
-                                                .allowedOrigins("http://localhost:5173")
-                                                .allowedMethods(HttpMethod.GET.name(),
-                                                                HttpMethod.POST.name(),
-                                                                HttpMethod.PUT.name(),
-                                                                HttpMethod.DELETE.name())
-                                                .allowedHeaders(
-                                                                HttpHeaders.CONTENT_TYPE,
-                                                                HttpHeaders.AUTHORIZATION);
-
-                        }
-                };
-        }
-
-        @Bean
         CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration config = new CorsConfiguration();
                 // React frontend
                 config.setAllowedOrigins(
-                                List.of("http://localhost:5173"
+                                List.of("http://localhost:5173",
+                                        "http://192.168.0.111:5173",
+                                        "http://192.168.*.*:[*]"
                                 // "http://localhost:5173/books",
                                 // "http://localhost:5173/dashboard",
                                 // "http://localhost:5173/borrow-records",

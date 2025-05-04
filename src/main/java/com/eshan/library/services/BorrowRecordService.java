@@ -47,7 +47,6 @@ public class BorrowRecordService {
             return borrowRecordRepository.save(borrowRecord);
         } else {
             throw new RuntimeException("Operation was not successful: Book-request was not approved!");
-
         }
 
     }
@@ -122,23 +121,6 @@ public class BorrowRecordService {
         borrowRecordRepository.deleteById(id);
     }
 
-//    @Transactional
-//    public void returnBook(Integer id) {
-//        BorrowRecord borrowRecord = borrowRecordRepository.findById(id).orElse(null);
-//
-//        if (borrowRecord != null) {
-//        // book quantity increase
-//            var currQuantity= borrowRecord.getBook().getQuantity();
-//            borrowRecord.getBook().setQuantity(currQuantity+1);
-//        // book returned now
-//            borrowRecord.setReturnDate(LocalDateTime.now());
-//            borrowRecordRepository.save(borrowRecord);
-//
-//        } else {
-//            throw new RuntimeException("Operation was not successful: BookRecord does not exist!");
-//        }
-//    }
-
     @Transactional
     public void returnBook(Integer id) {
         BorrowRecord borrowRecord = borrowRecordRepository.findById(id)
@@ -149,6 +131,16 @@ public class BorrowRecordService {
             throw new RuntimeException("Failed to update book quantity");
         }
         borrowRecord.setReturnDate(LocalDateTime.now());
+        borrowRecordRepository.save(borrowRecord);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BorrowRecordResponseDTO> findOngoingBorrows(Integer pageNumber,Integer pageSize) {
+        return borrowRecordRepository.findOngoingBorrowRecords(PageRequest.of(pageNumber, pageSize)).map(this::toBorrowRecordResponseDTO);
+    }
+    @Transactional(readOnly = true)
+    public Page<BorrowRecordResponseDTO> getBorrowHistory(Integer pageNumber,Integer pageSize) {
+        return borrowRecordRepository.findBorrowHistory(PageRequest.of(pageNumber, pageSize)).map(this::toBorrowRecordResponseDTO);
     }
 
     @Transactional
@@ -202,7 +194,6 @@ public class BorrowRecordService {
         return fine;
 
     }
-
     public long daysBetween(BorrowRecord borrowRecord) {
         LocalDateTime dueDateTime = borrowRecord.getDueDate();
         LocalDateTime returnedDateTime = borrowRecord.getReturnDate();
