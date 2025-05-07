@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import com.eshan.library.constants.Constants;
+import com.eshan.library.services.bookRequestDTO.BookRequestResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -177,6 +178,29 @@ public class BorrowRecordService {
     @Transactional(readOnly = true)
     public Page<BorrowRecordResponseDTO> getBorrowHistory(Integer pageNumber,Integer pageSize) {
         return borrowRecordRepository.findBorrowHistory(PageRequest.of(pageNumber, pageSize)).map(this::toBorrowRecordResponseDTO);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<BorrowRecordResponseDTO> getOngoingForStudent(Integer studentId, Integer pageNumber, Integer pageSize) {
+        Optional<Student> st = studentRepository.findById(studentId);
+        if (st.isPresent()) {
+            var page = borrowRecordRepository.findOngoingBorrowRecordsByStudentId(st.get().getId(), PageRequest.of(pageNumber,pageSize ));
+            return page.map(this::toBorrowRecordResponseDTO);
+        } else {
+            throw new RuntimeException("Operation was not successful: student does not exist");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BorrowRecordResponseDTO> getHistoryForStudent(Integer studentId, Integer pageNumber, Integer pageSize) {
+        Optional<Student> st = studentRepository.findById(studentId);
+        if (st.isPresent()) {
+            var page = borrowRecordRepository.findBorrowRecordsHistoryByStudentId(st.get().getId(), PageRequest.of(pageNumber,pageSize ));
+            return page.map(this::toBorrowRecordResponseDTO);
+        } else {
+            throw new RuntimeException("Operation was not successful: student does not exist");
+        }
     }
 
     @Transactional

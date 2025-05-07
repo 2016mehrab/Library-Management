@@ -2,6 +2,8 @@ package com.eshan.library.controllers;
 
 import java.util.List;
 
+import com.eshan.library.constants.Constants;
+import com.eshan.library.services.bookRequestDTO.BookRequestResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,7 @@ public class BorrowRecordController {
     @GetMapping
     public Page<BorrowRecordResponseDTO> findAll(
             @RequestParam(name = "page", defaultValue = "0") Integer pageNumber,
-            @RequestParam(defaultValue = "10") Integer pageSize
+            @RequestParam(defaultValue = Constants.PAGE_SIZE) Integer pageSize
 
     ) {
         return borrowRecordService.findAll(pageNumber, pageSize);
@@ -54,9 +56,35 @@ public class BorrowRecordController {
     @GetMapping("/history")
     public Page<BorrowRecordResponseDTO> borrowHistory(
             @RequestParam(name = "page", defaultValue = "0") Integer pageNumber,
-            @RequestParam(defaultValue = "10") Integer pageSize
+            @RequestParam(defaultValue = Constants.PAGE_SIZE) Integer pageSize
     ) {
         return borrowRecordService.getBorrowHistory(pageNumber,pageSize);
+    }
+
+    @GetMapping("/student/ongoing/{studentId}")
+    public ResponseEntity<Page<BorrowRecordResponseDTO>> getOngoingRecordForStudent(@PathVariable Integer studentId,
+                                                                               @RequestParam(name = "page", defaultValue = "0") int pageNumber,
+                                                                               @RequestParam(defaultValue = Constants.PAGE_SIZE) int pageSize) {
+        try {
+            var requests = borrowRecordService.getOngoingForStudent(studentId, pageNumber,
+                    pageSize);
+            return new ResponseEntity<>(requests, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/student/history/{studentId}")
+    public ResponseEntity<Page<BorrowRecordResponseDTO>> getHistoryRecordForStudent(@PathVariable Integer studentId,
+                                                                                @RequestParam(name = "page", defaultValue = "0") int pageNumber,
+                                                                                @RequestParam(defaultValue = Constants.PAGE_SIZE) int pageSize) {
+        try {
+            var requests = borrowRecordService.getHistoryForStudent(studentId, pageNumber,
+                    pageSize);
+            return new ResponseEntity<>(requests, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("{Id}")
