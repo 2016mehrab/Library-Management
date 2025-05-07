@@ -32,6 +32,7 @@ public class LibrarianService {
         librarian.setUsername("L_" + librarianDTO.username());
         librarian.setPassword(passwordEncoder.encode(librarianDTO.password()));
         librarian.setRole(Role.LIBRARIAN);
+        librarian.setEmail(librarianDTO.email());
 
         LibrarianInfo librarianInfo = librarianInfoRepository.findById(librarianDTO.librarianId()).orElse(null);
         if (librarianInfo != null) {

@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/librarian-auth")
 @RequiredArgsConstructor
-@CrossOrigin
 public class LibrarianAuthController {
     private final LibrarianAuthService authService;
 

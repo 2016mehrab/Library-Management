@@ -10,4 +10,8 @@ public interface LibrarianRepository extends JpaRepository<Librarian, Integer> {
     Optional<Librarian> findByLibrarianInfo_Id(Integer librarianId);
 
     Optional<Librarian> findByUsername(String username);
+
+    Optional<Librarian> findByEmail(String email);
+
+    Optional<Librarian> findByResetToken(String resetToken);
 }

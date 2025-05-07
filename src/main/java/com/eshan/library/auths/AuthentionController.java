@@ -1,10 +1,8 @@
 package com.eshan.library.auths;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthentionController {
     private final AuthenticationService authService;
+    private final PasswordResetService passwordResetService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -31,6 +30,32 @@ public class AuthentionController {
             @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
 
+    }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+       try{
+          passwordResetService.sendPasswordResetEmail(email);
+          return new ResponseEntity<>("Reset email sent", HttpStatus.OK);
+       }
+       catch(Exception e){
+           return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+       }
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetRequest rr) {
+        try{
+            passwordResetService.resetPassword(rr.getToken(), rr.getNewPassword());
+            return new ResponseEntity<>("Password updated successfully", HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Data
+    static class ResetRequest {
+        private String token;
+        private String newPassword;
     }
 
 }

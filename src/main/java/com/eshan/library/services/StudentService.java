@@ -31,6 +31,7 @@ public class StudentService {
         student.setUsername("S_" + studentDTO.username());
         student.setPassword(passwordEncoder.encode(studentDTO.password()));
         student.setRole(Role.STUDENT);
+        student.setEmail(studentDTO.email());
 
         StudentInfo studentInfo = studentInfoRepository.findById(studentDTO.studentId()).orElse(null);
         if (studentInfo != null) {

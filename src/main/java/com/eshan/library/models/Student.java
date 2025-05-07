@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class Student implements UserDetails{
         private StudentInfo studentInfo;
 
         @Column(unique = true, nullable = false)
+        private String email;
+
+        @Column(unique = true, nullable = false)
         private String username;
         private String password;
         @OneToMany(mappedBy = "student")
@@ -40,6 +44,12 @@ public class Student implements UserDetails{
         @OneToMany(mappedBy = "student")
         @JsonManagedReference("bookrequest-student")
         private List<BookRequest> bookRequests;
+
+        @Column(unique = true, name="reset_token")
+        private String resetToken;
+
+        @Column(name = "reset_token_expiry")
+        private LocalDateTime resetTokenExpiry;
 
         @Enumerated(EnumType.STRING)
         private Role role;
