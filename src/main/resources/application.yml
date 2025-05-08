@@ -3,19 +3,15 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/library_management
     username: root
     password: rootpassword
-    driver-class-name: com.mysql.jdbc.Driver
-  mvc:
-    enableLoggingRequestDetails: false
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database: mysql
     show-sql: false
 server:
   port: 8080
-  error:
-    include-stacktrace: never
 logging:
   pattern:
     console: "%d{HH:mm:ss dd-MM-yyyy} - %msg%n"
@@ -23,6 +19,13 @@ logging:
   file:
     name: app.log
   level: 
-    org.springframework.security: DEBUG
+    org.springframework.security: TRACE
     org.springframework.web: DEBUG
     com.eshan.library: DEBUG
+app:
+  api:
+    url: "http://127.0.0.1"
+
+postmark:
+  api-key: "36a6087b-3ce8-49f0-be74-5937171d08cb"
+  from-email: "ervino'keefe@chefalicious.com"

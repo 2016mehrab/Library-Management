@@ -1,0 +1,14 @@
+FROM openjdk:17-jdk-slim
+
+RUN apt-get update && apt-get install -y netcat
+WORKDIR /app
+COPY target/library-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/library_management
+ENV SPRING_DATASOURCE_USERNAME=root
+# ENV SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+ENV SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+# ENV POSTMARK_API_KEY=${POSTMARK_API_KEY}
+# ENV POSTMARK_FROM_EMAIL=${POSTMARK_FROM_EMAIL}
+ENV LOGGING_FILE_NAME=app.log
+ENTRYPOINT ["java", "-Xmx512m", "-jar", "app.jar"]

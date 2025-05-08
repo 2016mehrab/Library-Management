@@ -2,7 +2,8 @@
 @librarian-url=http://127.0.0.1:8080/librarians
 @book-url=http://localhost:8080/books 
 @bookrequest-url=http://127.0.0.1:8080/bookrequests
-@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwidXNlcklkIjoxMDEsInN1YiI6IkxfcmFobWFuIiwiaWF0IjoxNzQ0Mzg0OTU5LCJleHAiOjE3NDQ0NzEzNTl9.LQpWgFpMqZvLSnw79d4nOxH1Pdem2juNTDBMAXpK4V0
+@borrow-url=http://127.0.0.1:8080/borrowrecords
+@auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwidXNlcklkIjoxMDEsInN1YiI6IkxfcmFobWFuIiwiaWF0IjoxNzQ2Njk0NzA2LCJleHAiOjE3NDY3ODExMDZ9.PbxkS3tkkjcMoWgOPcIwmcYeT_Vrujp0o3S8R9RofLA
 @student-auth-token=eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTElCUkFSSUFOIiwic3ViIjoiTF9yYWhtYW4iLCJpYXQiOjE3NDE3NzUyODEsImV4cCI6MTc0MTg2MTY4MX0.ujo5GkxH9qNDYS2kumMbGS-jq0dCmfRLHRzy-t2SsDY
 
 ###
@@ -13,9 +14,16 @@ Content-Type: application/json
 {
     "username": "rahman",
     "password": "rahman",
+    "email":"malcolmmarvin@chefalicious.com",
     "librarianId":101
 }
+### Forgot password
+POST http://localhost:8080/auth/forgot-password?email=malcolmmarvin@chefalicious.com
 ###
+POST http://127.0.0.1:8080/auth/reset-password 
+Content-Type: application/json
+
+{"token":"05986cca-af5d-4606-af56-70d838a956d9", "newPassword":"rahmanrocks"}
 ###
 POST {{auth-url}}/authenticate
 Content-Type: application/json
@@ -132,8 +140,7 @@ PUT {{bookrequest-url}}/1/status
 Authorization: Bearer {{auth-token}}
 Content-Type: application/json
 
-{
-    "approveStatus":"REJECTED"
+{ "approveStatus":"REJECTED"
 }
 ###  APPROVING BOOK REQUEST
 PUT {{bookrequest-url}}/1/status
@@ -159,3 +166,12 @@ Content-Type: application/json
 {
     "approveStatus":"APPROVED"
 }
+###
+GET {{borrow-url}}
+Authorization: Bearer {{auth-token}}
+###
+PATCH  {{borrow-url}}/1/test-return
+Authorization: Bearer {{auth-token}}
+###
+PATCH  {{borrow-url}}/2/test-return?delay=10
+Authorization: Bearer {{auth-token}}
