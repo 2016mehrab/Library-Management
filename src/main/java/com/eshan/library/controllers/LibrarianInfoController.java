@@ -2,6 +2,10 @@ package com.eshan.library.controllers;
 
 import java.util.List;
 
+import com.eshan.library.services.AdminService;
+import com.eshan.library.services.EmailUpdateDTO;
+import com.eshan.library.services.NameUpdateDTO;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,14 +27,29 @@ import com.eshan.library.services.LibrarianInfoService;
 @CrossOrigin
 public class LibrarianInfoController {
     private final LibrarianInfoService librarianInfoService;
+    private final AdminService adminService;
 
-    public LibrarianInfoController(LibrarianInfoService librarianInfoService) {
+    public LibrarianInfoController(LibrarianInfoService librarianInfoService, AdminService adminService) {
         this.librarianInfoService = librarianInfoService;
+        this.adminService = adminService;
     }
 
     @PostMapping
-    public ResponseEntity<LibrarianInfo> post(@RequestBody LibrarianInfo librarianInfo) {
+    public ResponseEntity<LibrarianInfo> post(@RequestBody LibrarianInfoDTO librarianInfoDTO) {
         try {
+            LibrarianInfo librarianInfo = new LibrarianInfo();
+            librarianInfo.setName(librarianInfoDTO.getName());
+            librarianInfo.setEmail(librarianInfoDTO.getEmail());
+
+            var admin = adminService.findAdminById(librarianInfoDTO.getAdminId());
+
+            if (admin == null) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            librarianInfo.setAdmin(admin);
+            librarianInfo.setId(librarianInfoDTO.getId());
+
+
             LibrarianInfo savedLI = librarianInfoService.saveLibrarianInfo(librarianInfo);
             return new ResponseEntity<LibrarianInfo>(savedLI, HttpStatus.CREATED);
 
@@ -57,10 +76,11 @@ public class LibrarianInfoController {
 
     @PutMapping("email/{libId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<LibrarianInfo> updateEmail(@RequestBody LibrarianInfo librarianInfo,
+    public ResponseEntity<LibrarianInfo> updateEmail(@RequestBody EmailUpdateDTO emailUpdateDTO,
             @PathVariable("libId") Integer id) {
         try {
-            librarianInfoService.updateLibrarianInfoEmail(librarianInfo, id);
+
+            librarianInfoService.updateLibrarianInfoEmail(emailUpdateDTO, id);
             return new ResponseEntity<>(null, HttpStatus.OK);
 
         } catch (Exception e) {
@@ -69,15 +89,22 @@ public class LibrarianInfoController {
     }
 
     @PutMapping("name/{libId}")
-    public ResponseEntity<LibrarianInfo> updateName(@RequestBody LibrarianInfo librarianInfo,
+    public ResponseEntity<LibrarianInfo> updateName(@RequestBody NameUpdateDTO nameUpdateDTO,
             @PathVariable("libId") Integer id) {
         try {
-            librarianInfoService.updateLibrarianInfoName(librarianInfo, id);
+            librarianInfoService.updateLibrarianInfoName(nameUpdateDTO, id);
             return new ResponseEntity<>(null, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+    @Data
+    static class LibrarianInfoDTO{
+        private Integer id;
+        private String name;
+        private String email;
+        private Integer adminId;
     }
 
 }

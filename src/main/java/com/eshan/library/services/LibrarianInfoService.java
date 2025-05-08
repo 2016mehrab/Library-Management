@@ -10,18 +10,16 @@ import com.eshan.library.repositories.AdminRepository;
 import com.eshan.library.repositories.LibrarianInfoRepository;
 
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
 public class LibrarianInfoService {
+
     private final LibrarianInfoRepository librarianInfoRepository;
     private final AdminRepository adminRepository;
 
-    // public LibrarianInfoService(LibrarianInfoRepository librarianInfoRepository,
-    // AdminRepository adminRepository) {
-    // this.librarianInfoRepository = librarianInfoRepository;
-    // this.adminRepository = adminRepository;
-    // }
+    @Transactional
     public LibrarianInfo saveLibrarianInfo(LibrarianInfo librarianInfo) {
         Admin admin = adminRepository.findById(librarianInfo.getAdmin().getId()).orElse(null);
         if (librarianInfoRepository.existsById(librarianInfo.getId())) {
@@ -35,32 +33,37 @@ public class LibrarianInfoService {
         }
     }
 
+    @Transactional(readOnly = true)
     public LibrarianInfo findLibrarianInfoById(Integer id) {
         return librarianInfoRepository.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public List<LibrarianInfo> findAllLibrarianInfo() {
         return librarianInfoRepository.findAll();
     }
 
+    @Transactional
     public void deleteLibrarianInfo(Integer id) {
         librarianInfoRepository.deleteById(id);
     }
 
-    public void updateLibrarianInfoEmail(LibrarianInfo librarianInfo, Integer id) {
+    @Transactional
+    public void updateLibrarianInfoEmail(EmailUpdateDTO emailUpdateDTO, Integer id) {
         LibrarianInfo updatedLI = librarianInfoRepository.findById(id).orElse(null);
-        if (librarianInfo != null) {
-            updatedLI.setEmail(librarianInfo.getEmail());
+        if (emailUpdateDTO.email() != null && updatedLI != null) {
+            updatedLI.setEmail(emailUpdateDTO.email());
             librarianInfoRepository.save(updatedLI);
         } else {
             throw new RuntimeException("Operation was not successful: Librarian Not Found!");
         }
     }
 
-    public void updateLibrarianInfoName(LibrarianInfo librarianInfo, Integer id) {
+    @Transactional
+    public void updateLibrarianInfoName(NameUpdateDTO nameUpdateDTO, Integer id) {
         LibrarianInfo updatedLI = librarianInfoRepository.findById(id).orElse(null);
-        if (librarianInfo != null) {
-            updatedLI.setName(librarianInfo.getName());
+        if (nameUpdateDTO.name() != null && updatedLI != null) {
+            updatedLI.setName(nameUpdateDTO.name());
             librarianInfoRepository.save(updatedLI);
         } else {
             throw new RuntimeException("Operation was not successful: Librarian Not Found!");

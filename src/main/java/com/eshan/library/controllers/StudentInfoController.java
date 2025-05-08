@@ -1,5 +1,10 @@
 package com.eshan.library.controllers;
 
+import com.eshan.library.models.LibrarianInfo;
+import com.eshan.library.services.AdminService;
+import com.eshan.library.services.EmailUpdateDTO;
+import com.eshan.library.services.NameUpdateDTO;
+import lombok.Data;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,14 +29,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin
 public class StudentInfoController {
     private final StudentInfoService studentInfoService;
+    private final AdminService adminService;
 
-    public StudentInfoController(StudentInfoService studentInfoService) {
+    public StudentInfoController(StudentInfoService studentInfoService, AdminService adminService) {
         this.studentInfoService = studentInfoService;
+        this.adminService = adminService;
     }
 
     @PostMapping
-    public ResponseEntity<StudentInfo> post(@RequestBody StudentInfo studentInfo) {
+    public ResponseEntity<StudentInfo> post(@RequestBody StudentInfoDTO studentInfoDTO) {
         try {
+
+            StudentInfo studentInfo = new StudentInfo();
+            studentInfo.setName(studentInfoDTO.getName());
+            studentInfo.setEmail(studentInfoDTO.getEmail());
+            studentInfo.setId(studentInfoDTO.getId());
+
+            var admin = adminService.findAdminById(studentInfoDTO.getAdminId());
+
+            if (admin == null) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            studentInfo.setAdmin(admin);
             StudentInfo savedStudentInfo = studentInfoService.saveStudentInfo(studentInfo);
             return new ResponseEntity<StudentInfo>(savedStudentInfo, HttpStatus.CREATED);
 
@@ -60,10 +79,10 @@ public class StudentInfoController {
     @ResponseStatus(HttpStatus.OK)
     // public void updateStudentInfoEmail(@RequestBody StudentInfo
     // studentInfo,@PathVariable("studentId")Integer id){
-    public ResponseEntity<StudentInfo> updateStudentInfoEmail(@RequestBody StudentInfo studentInfo,
+    public ResponseEntity<StudentInfo> updateStudentInfoEmail(@RequestBody EmailUpdateDTO emailUpdateDTO,
             @PathVariable("studentId") Integer id) {
         try {
-            studentInfoService.updateStudentInfoEmail(studentInfo, id);
+            studentInfoService.updateStudentInfoEmail(emailUpdateDTO, id);
             return new ResponseEntity<>(null, HttpStatus.OK);
 
         } catch (Exception e) {
@@ -73,14 +92,22 @@ public class StudentInfoController {
 
     @PutMapping("name/{studentId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<StudentInfo> updateStudentInfoName(@RequestBody StudentInfo studentInfo,
+    public ResponseEntity<StudentInfo> updateStudentInfoName(@RequestBody NameUpdateDTO nameUpdateDTO,
             @PathVariable("studentId") Integer id) {
         try {
-            studentInfoService.updateStudentInfoName(studentInfo, id);
+            studentInfoService.updateStudentInfoName(nameUpdateDTO, id);
             return new ResponseEntity<>(null, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Data
+    static class StudentInfoDTO {
+        private Integer id;
+        private String name;
+        private String email;
+        private Integer adminId;
     }
 }

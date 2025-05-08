@@ -8,6 +8,7 @@ import com.eshan.library.models.Admin;
 import com.eshan.library.models.StudentInfo;
 import com.eshan.library.repositories.AdminRepository;
 import com.eshan.library.repositories.StudentInfoRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudentInfoService {
@@ -19,6 +20,7 @@ public class StudentInfoService {
         this.adminRepository = adminRepository;
     }
 
+    @Transactional
     public StudentInfo saveStudentInfo(StudentInfo studentInfo) {
         Admin admin = adminRepository.findById(studentInfo.getAdmin().getId()).orElse(null);
         if (studentInfoRepository.existsById(studentInfo.getId())) {
@@ -32,33 +34,37 @@ public class StudentInfoService {
         }
     }
 
+    @Transactional(readOnly = true)
     public StudentInfo findStudentInfoById(Integer id) {
         return studentInfoRepository.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public List<StudentInfo> findAllStudentInfo() {
         return studentInfoRepository.findAll();
     }
 
+    @Transactional
     public void deleteStudentInfo(Integer id) {
         studentInfoRepository.deleteById(id);
     }
 
-    public void updateStudentInfoEmail(StudentInfo studentInfo, Integer id) {
+    @Transactional
+    public void updateStudentInfoEmail(EmailUpdateDTO emailUpdateDTO, Integer id) {
         StudentInfo updatedStudentInfo = studentInfoRepository.findById(id).orElse(null);
-        if (studentInfo != null) {
-            updatedStudentInfo.setEmail(studentInfo.getEmail());
+        if (emailUpdateDTO.email() != null && updatedStudentInfo != null) {
+            updatedStudentInfo.setEmail(emailUpdateDTO.email());
             studentInfoRepository.save(updatedStudentInfo);
         } else {
             throw new RuntimeException("Operation was not successful: Student Not Found!");
         }
-
     }
 
-    public void updateStudentInfoName(StudentInfo studentInfo, Integer id) {
+    @Transactional
+    public void updateStudentInfoName(NameUpdateDTO nameUpdateDTO, Integer id) {
         StudentInfo updatedStudentInfo = studentInfoRepository.findById(id).orElse(null);
-        if (studentInfo != null) {
-            updatedStudentInfo.setName(studentInfo.getName());
+        if (nameUpdateDTO.name() != null && updatedStudentInfo!=null) {
+            updatedStudentInfo.setName(nameUpdateDTO.name());
             studentInfoRepository.save(updatedStudentInfo);
         } else {
             throw new RuntimeException("Operation was not successful: Student Not Found!");
