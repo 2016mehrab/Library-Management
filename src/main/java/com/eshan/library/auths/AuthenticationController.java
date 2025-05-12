@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthentionController {
+public class AuthenticationController {
     private final AuthenticationService authService;
     private final PasswordResetService passwordResetService;
 
@@ -29,8 +29,8 @@ public class AuthentionController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
-
     }
+
     @GetMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam String email) {
        try{

@@ -25,14 +25,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/library_management
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO:  create-drop
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SERVER_PORT: 8080
       APP_API_URL: http://app
       POSTMARK_API_KEY: ${POSTMARK_API_KEY}
       POSTMARK_FROM_EMAIL: ${POSTMARK_FROM_EMAIL}
       LOGGING_FILE_NAME: "/logs/app.log"
-    ports:
-      - "8081:8080"
     depends_on:
       mysql:
         condition: service_healthy
@@ -41,7 +39,7 @@ services:
       interval: 30s
       timeout: 30s
       retries: 5
-      start_period: 1m
+      start_period: 2m
     volumes:
       - ./logs:/logs
     networks:
