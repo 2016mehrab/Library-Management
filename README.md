@@ -1,8 +1,3 @@
-
-Here is your enriched documentation using **Markdown syntax**, formatted professionally for a `README.md` file:
-
----
-
 # 📚 Library Management System
 
 This is a **Spring Boot-based Library Management System** deployed using **Docker Compose**. It manages **admins, librarians, students**, and library operations with:
