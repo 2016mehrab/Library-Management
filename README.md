@@ -1,6 +1,6 @@
 # 📚 Library Management System
 
-This is a **Spring Boot-based Library Management System** deployed using **Docker Compose**. It manages **admins, librarians, students**, and library operations with:
+This is a **Spring Boot-based Library Management System API** for managing **admins, librarians, students**, and library operations with:
 
 * **MySQL** for persistence
 * **Nginx** as a reverse proxy for load balancing
